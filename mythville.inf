@@ -1,0 +1,18 @@
+! Mythville
+
+Constant Story "Mythville, a story";
+Constant Headline "Here we describe the headline";
+
+Include "parser";
+Include "verblib";
+Include "grammar";
+
+[ Initialise;
+  location = Lobby;
+];
+
+Object Lobby "The starting lobby"
+  has scenery
+  has light
+  with description "A white room.";
+  
