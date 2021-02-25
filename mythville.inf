@@ -14,5 +14,40 @@ Include "grammar";
 Object Lobby "The starting lobby"
   has scenery
   has light
-  with description "A white room.";
-  
+  with description "A white room. To the west you see a long hallway.",
+  w_to Long_Hallway;
+
+Object Long_Hallway "Long Hallway"
+  has scenery
+  has light
+  with description "A long hallway with many doors. To the east you see a white door. To the north you see a glass door. On the ceiling you see a colorful portal. On the floor you see a wooden trap door. To the southwest you see a steel airlock.",
+  u_to Center_of_the_Community,
+  d_to Basement,
+  n_to Garden,
+  sw_to Airlock,
+  e_to Lobby;
+
+Object Center_of_the_Community "Center of the community"
+  has scenery
+  has light
+  with description "The center of the community where everyone spawns",
+  d_to Long_Hallway;
+
+Object Garden "Garden"
+  has scenery
+  has light
+  with description "A small garden in the backyard it has tulips and roses",
+  s_to Lobby;
+
+Object Basement "Basement"
+  has scenery
+  has light
+  with description "A dark musty basement with only a little light.",
+  u_to Long_Hallway;
+
+Object Airlock "Airlock"
+  has scenery
+  has light
+  with description "A futuristic airlock",
+  ne_to Long_Hallway;
+
