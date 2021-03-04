@@ -39,11 +39,60 @@ Object Garden "Garden"
   with description "A small garden in the backyard it has tulips and roses",
   s_to Lobby;
 
+Object Castle "Castle" 
+  has scenery
+  has light 
+  with description "A tall, fancy castle. To the north east, you a gate.",
+  ne_to Tree_House;
+
+Object Tree_House "Tree House" 
+  has scenery
+  has light 
+  with description "A small wooden treehouse on the top of a giant oak tree. To the east, you see a swirling portal. To the south west, you see a gate.", 
+  e_to Basement,
+  sw_to Castle;
+
+Object School_House "School House"
+  has scenery
+  has light
+  with description "The old fashion school house", 
+  w_to Rocky_Tunnel; 
+
+Object Strange_House "Strange House"
+  has scenery
+  has light
+  with description "A very strange house. To the south, you see a fancy house door.",
+  s_to Rocky_Tunnel, 
+  n_to Winter_Woods; 
+
+Object Eiffel_Tower "Eiffel Tower" 
+  has scenery
+  has light
+  with description "The tower, glowing bright, looks peaceful under the setting sun. Below you, you see a blinding bright portal.", 
+  d_to Winter_Woods;
+
+Object Winter_Woods "Winter Woods"
+  has scenery
+  has light
+  with description "With the trees covered in snow, the place looked like winter wonderland. To the south, you see a fancy house door. Above you, you see a blinding bright portal.",
+  s_to Strange_House,
+  u_to Eiffel_Tower;
+
+Object Rocky_Tunnel "Rocky Tunnel"
+  has scenery
+  has light
+  with description "The quiet tunnel with rocks plunging down from the hollow celing. To the north, you see a fancy house door. To the east, you see a metal trapdoor.",
+  w_to Basement,
+  n_to Strange_House,
+  e_to School_House; 
+
 Object Basement "Basement"
   has scenery
   has light
-  with description "A dark musty basement with only a little light.",
-  u_to Long_Hallway;
+  with description "A dark musty basement with only a little light. Above you, you see a wooden trap door. To the east, you see a door that looks like it is made out of rocks. To the west, you see a swirling portal",
+  u_to Long_Hallway,
+  e_to Rocky_Tunnel,
+  w_to Tree_House;
 
 Object Airlock "Airlock"
   has scenery
