@@ -42,9 +42,15 @@ Object Garden "Garden"
 Object Castle "Castle" 
   has scenery
   has light 
-  with description "A tall, fancy castle. To the north east, you a gate.",
-  ne_to Tree_House;
+  with description "A tall, fancy castle. To the north east, you a gate. To the east, you see a shimmering, glowing portal.",
+  ne_to Tree_House,
+  e_to Mystic_Island;
 
+Object Mystic_Island "Mystic Island"
+  has scenery
+  has light
+  with description "The Mystic Island is where all the magic and myths come from. It's a myjestic place with a lot of interesting things to study. To the west, you see a shimmering, glowing portal.",
+w_to Castle;
 Object Tree_House "Tree House" 
   has scenery
   has light 
@@ -55,7 +61,7 @@ Object Tree_House "Tree House"
 Object School_House "School House"
   has scenery
   has light
-  with description "The old fashion school house", 
+  with description "The old fashion school house. To the west, you see a door that looks like it is made out of rocks.", 
   w_to Rocky_Tunnel; 
 
 Object Strange_House "Strange House"
@@ -68,8 +74,15 @@ Object Strange_House "Strange House"
 Object Eiffel_Tower "Eiffel Tower" 
   has scenery
   has light
-  with description "The tower, glowing bright, looks peaceful under the setting sun. Below you, you see a blinding bright portal.", 
-  d_to Winter_Woods;
+  with description "The tower, glowing bright, looks peaceful under the setting sun. Below you, you see a blinding bright portal. To the south, you see a blue door.", 
+  d_to Winter_Woods,
+  s_to Ocean; 
+
+Object Ocean "Ocean"
+  has scenery
+  has light
+  with description "The ocean only has a little light as you are in the twilight zone",
+  n_to Eiffel_Tower;
 
 Object Winter_Woods "Winter Woods"
   has scenery
@@ -85,6 +98,9 @@ Object Rocky_Tunnel "Rocky Tunnel"
   w_to Basement,
   n_to Strange_House,
   e_to School_House; 
+
+Object -> Gemstone "Gemstone"
+  with name "gem";
 
 Object Basement "Basement"
   has scenery
