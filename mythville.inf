@@ -51,3 +51,18 @@ Object Airlock "Airlock"
   with description "A futuristic airlock",
   ne_to Long_Hallway;
 
+Object -> Space_Bag "Space Bag"
+  has container
+  has openable
+  with capacity 7,
+  with name "bag",
+  with description "A futuristic space bag made out of advanced polymers.";
+
+Object -> Space_Rock "Rock"
+  with name "rock";
+
+Object -> Space_Boot "Boot"
+  with name "boot";
+
+Object -> Space_Helmet "Helmet"
+  with name "helmet";
