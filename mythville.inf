@@ -14,19 +14,102 @@ Include "grammar";
 Object Lobby "The starting lobby"
   has scenery
   has light
-  with description "A white room. To the west you see a long hallway.",
-  w_to Long_Hallway;
+  with description "A white room. To the west you see a long hallway. To the north you see a gate.",
+  w_to Long_Hallway,
+  n_to Front_Yard;
 
+Object -> Backpack "Backpack"
+  with name "backpack"
+  with capacity 5
+  has container
+  has openable
+  with description "A backpack. It has 5 capacity";
+
+Object Front_Yard "Front Yard"
+  has scenery
+  has light
+  with description "A nice and clean front yard. It has bushes, flowers, and grass everywhere. You can hear birds chirping in the distance. There is a giant oak tree placed near the sidewalk, which has many apples on it. To the east you see a church.",
+  s_to Lobby,
+  e_to Church;
+
+Object Church "Church" 
+  has light
+  has scenery
+  with description "A spiritual church. People pray to the gods for good food, shelter, and more. They perform many rituals there and sing melodious songs.",
+  w_to Front_Yard;
+ 
 Object Long_Hallway "Long Hallway"
   has scenery
   has light
-  with description "A long hallway with many doors. To the east you see a white door. To the north you see a glass door. On the ceiling you see a colorful portal. On the floor you see a wooden trap door. To the southwest you see a steel airlock.",
+  with description "A long hallway with many doors. To the east you see a white door. To the north you see a glass door. On the ceiling you see a colorful portal. On the floor
+ you see a wooden trap door. To the northwest you see an abandoned library. To the southwest you see a steel airlock.",
   u_to Center_of_the_Community,
+  nw_to Abandoned_Library,
   d_to Basement,
   n_to Garden,
   sw_to Airlock,
   e_to Lobby;
 
+Object Abandoned_Library "Abandoned Library"
+  has scenery
+  has light
+  with description "An old library made 56 years ago. There is cobwebs and ancient books that could be useful for your information. Below you there is a dusty trapdoor. To the north you see an old hallway. The torches are dimly lit so you can see only some light.",
+  se_to Long_Hallway,
+  d_to Hidden_Room,
+  n_to Old_Hallway;
+
+Object Hidden_Room "Hidden Room" 
+  has scenery
+  has light
+  with description "A dark hidden place. You can hear eerie voices and bats screeching. You see that there is enchanted books on each bookshelf and even some weapons lying around. You realize this is the place where the librarians kept their most treasured and valuable items. The enchanted books give some special powers to the weapons and teaches you how to use it.",
+  u_to Abandoned_Library;
+
+Object -> Enchanted_Book "Enchanted Book"
+  with name "book"
+  with description "Smite: Use the Smite Enchantment by reaching your sword up into the clouds and calling for the lightning. The lighning will soon come down and charge your weapon with electricity. Use this to smite one of your enemies. Note: Only works in a thunderstorm.";
+ 
+Object Old_Hallway "Old Hallway"
+  has scenery
+  has light
+  with description "An old hallway. It has been used many times by librarians to get to different rooms. On the east side you see a training room. On the west side you see a reading room. In the north you see a meditation room.",
+  s_to Abandoned_Library,
+  e_to Training_Room,
+  w_to Reading_Room,
+  n_to Meditation_Room;
+
+Object Training_Room "Training Room" 
+  has scenery
+  has light
+  with description "A training room. Visitors used to train here with their weapons by reading about them and how to use it. They often practiced against a wall, using their techniques and skills." ,
+  w_to Old_Hallway;
+
+Object -> Sword "Sword"
+  with name "Sword"
+  with description "Never give up without a fight.";
+
+Object Reading_Room "Reading Room"
+  has scenery
+  has light
+  with description "A reading room. People used to study here about famous knights, warriors, and leaders, and also just took the time here to read fairy tales and stories with beasts and knights. There is many books here about countless things you can imagine and has many chairs, couches, and carpets for you to get in a comfy spot and read.",
+  e_to Old_Hallway;
+
+Object -> Fairy_Tale_Book "Fairy Tale Book"
+  with name "story"
+  with description "Belle, a nice princess, comes to the the Beast, a cursed prince, after her father had been taken by him. She lived with him for a few days and began to love him. When they kissed, the curse was broken, and the Beast turned into a handsome prince. They lived happily ever after. The end";
+
+Object Meditation_Room "Meditation Room" 
+  has scenery
+  has light
+  with description "An ancient meditation circle. People used to gather up here and meditate here for a while, trying to listen to the spirits of their ancestors. This is one of the few  places you can meditate to get into the spirit world, a magical place where spirits, ghosts, and human visitors can dance around in harmony. You can go north and meditate to enter the spirit world.",
+  s_to Old_Hallway,
+  n_to Spirit_World;
+
+Object Spirit_World "Spirit World"
+  has scenery
+  has light
+  with description "The happy and bright spirit world! You see ghouls, spirits, humans, and all of the dead play board games, dance, and sing together around in harmony. You see everyone gathers around as their leader, Anubis, sings a melodic anthem to the whole crowd.",
+  s_to Meditation_Room;
+ 
 Object Center_of_the_Community "Center of the community"
   has scenery
   has light
@@ -37,7 +120,7 @@ Object Garden "Garden"
   has scenery
   has light
   with description "A small garden in the backyard it has tulips and roses",
-  s_to Lobby;
+  s_to Long_Hallway;
 
 Object Basement "Basement"
   has scenery
