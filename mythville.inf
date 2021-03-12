@@ -46,7 +46,7 @@ Object Long_Hallway "Long Hallway"
   u_to Center_of_the_Community,
   nw_to Abandoned_Library,
   d_to Basement,
-  n_to Garden,
+  n_to Portal_Room,
   sw_to Airlock,
   e_to Lobby;
 
@@ -116,11 +116,66 @@ Object Center_of_the_Community "Center of the community"
   with description "The center of the community where everyone spawns",
   d_to Long_Hallway;
 
-Object Garden "Garden"
+Object Portal_Room "Portal Room"
   has scenery
   has light
-  with description "A small garden in the backyard it has tulips and roses",
-  s_to Long_Hallway;
+  with description "A Room with four Portals. there is a white portal to the north west, a scarlet portal to the north east, a turquoise portal to the south east, and a dark green to the south west. a glass door stands in the south.",
+  s_to Long_Hallway,
+  se_to Tropical_Beach,
+  ne_to Volcano;
+
+Object Volcano "Volcano"
+  has scenery
+  has light
+  with description " The Temputure at this volcano is a thousand degrees high. you can see a Dwarf city to the north and a portal stands to the south west.",
+  n_to Dwarf_City,
+  sw_to Portal_Room;
+
+Object Dwarf_City " Dwarf City"
+  has scenery
+  has light
+  with description " A Huge Dwarf City is 11 acres wide! There is Lava as a light scource and there are houses of Metal! you can even see a few Gnomes too! there is a Volcano to the south.",
+  s_to Volcano;
+
+Object -> Drunk_Dwarf "Drunken  Dwarf"
+  has male animate
+  with name "dwarf"
+  with description " His Firery red beard is covered in Beer and Grease he has small eyes and stone armor.",
+  life [;
+       Answer: print_ret " 'Hic*! why young lassie! Hic* I wlecome ye to the Hic* Stone city! HIC*!' yep. he's drunk.";
+       kiss: print_ret "he has fresh beer on his lips. you really don't want to get drunk, so you don't kiss him.";
+       Attack: print_ret " you think he deserves this for being slightly rude. you swing your sword but he tips away in the nick of time ARGH!";
+  ];
+
+Object Tropical_Beach "Tropical Beach"
+  has scenery
+  has light
+  with description "you walk into a tropical beach as your feet touch the warm sand. you can see a wild jungle to the east and an Underwater city to the north. a portal stands in the north west.",
+  nw_to Portal_Room,
+  e_to Wild_Jungle,
+  n_to Atlantis;
+
+Object Wild_Jungle "Wild Jungle"
+  has scenery
+  has light
+  with description "the wild jungle is so pretty. there is a small baby tiger looking at you with its mom. there is a small beach to the west",
+  w_to Tropical_Beach;
+
+Object -> Baby_Tiger "Baby Tiger"
+  has animate
+  with name "baby" "tiger"
+  with description "It's big goo goo eyes stare at you with great Curiosity, the fur is a light orange and very clean.",
+  life [;
+       Answer: print_ret  " 'Roooooooooooooooooow rrrr' AH! SO CUTE!!!";
+       kiss: print_ret  " BLECH! tastes like deer carcas!";
+       Attack: print_ret  " It's Mother Looks at you with such menacing eyes. you reconsider.";
+  ];
+
+Object Atlantis "Atlantis"
+  has scenery
+  has light
+  with description " The fabled underwater city is REAL! you see mermaids of all kinds swimming into schools and theaters. you can see a beach to the south.",
+  s_to Tropical_Beach;
 
 Object Castle "Castle" 
   has scenery
