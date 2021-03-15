@@ -136,24 +136,24 @@ Object Lovely_Forest "Lovely Forest"
 Object Small_Glade "Small Glade."
   has scenery
   has light
-  with description " a small Glade with only two trees, to the west there is a scary forest, to the north is a lovely forest."
+  with description " a small Glade with only two trees, to the west there is a scary forest, to the north is a lovely forest.",
   n_to Lovely_Forest,
   w_to Scary_Forest;
 
 Object Scary_Forest "Scary Forest"
   has scenery
   has light
-  with description " a forest with dried trees and heavy fog. the only way to escape the nightmare is to go to the east."
-  e_to Small_Glade
+  with description " a forest with dried trees and heavy fog. the only way to escape the nightmare is to go to the east.",
+  e_to Small_Glade;
 
 Object -> Old_Hag "Old Hag"
   has female animate
-  with name "Hag"
-  with description "her old wrinkly face has a smirk, but it looks like a friendly smirk. her green eyes and white hair are very think and light. she looks to be about 89 years old."
+  with name "Hag",
+  with description "her old wrinkly face has a smirk, but it looks like a friendly smirk. her green eyes and white hair are very think and light. she looks to be about 89 years old.",
   life [;
-       Answer: print_ret "'hello mortal. do not fear me, I have a freindly soul.' you kind of like her by now."
-       Kiss: print_ret "kissing seems like a bad Idea. you probably shouldn't touch her delicate skin."
-       Attack: print_ret "she conjures a green sheild. ' this happens to me all the time!' wow she didn't even care!"
+       Answer: print_ret "'hello mortal. do not fear me, I have a freindly soul.' you kind of like her by now.";
+       Kiss: print_ret "kissing seems like a bad Idea. you probably shouldn't touch her delicate skin.";
+       Attack: print_ret "she conjures a green sheild. ' this happens to me all the time!' wow she didn't even care!";
   ];
 
 Object Cloudtopia "Cloudtopia"
@@ -171,12 +171,12 @@ Object Mount_Angel "Mt. Angel"
 
 Object -> Goddess "Goddess"
   has female animate
-  with name "goddess"
-  with description " her blonde hair is so long, it's like a river. her beautifull white cloak shines in the light. her wings are so strong. they can make a gale."
+  with name "goddess",
+  with description " her blonde hair is so long, it's like a river. her beautifull white cloak shines in the light. her wings are so strong. they can make a gale.",
   life [;
-       Answer: print_ret "'oh child. your heart is so pure I love how your mind is so full of life.'"
-       Kiss: print_ret "wow. she tastes like your favorite candy!!!"
-       Attack: print_ret "your weapon goes right past her"
+       Answer: print_ret "'oh child. your heart is so pure I love how your mind is so full of life.'";
+       Kiss: print_ret "wow. she tastes like your favorite candy!!!";
+       Attack: print_ret "your weapon goes right past her";
   ];
 
 Object Volcano "Volcano"
