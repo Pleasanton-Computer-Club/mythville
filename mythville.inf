@@ -189,23 +189,34 @@ Object Mystic_Island "Mystic Island"
   has light
   with description "The Mystic Island is where all the magic and myths come from. It's a myjestic place with a lot of interesting things to study. To the west, you see a shimmering, glowing portal.",
 w_to Castle;
+
 Object Tree_House "Tree House" 
   has scenery
   has light 
   with description "A small wooden treehouse on the top of a giant oak tree. To the east, you see a swirling portal. To the south west, you see a gate.", 
   e_to Basement,
-  sw_to Castle;
+  sw_to Castle; 
 
 Object School_House "School House"
   has scenery
   has light
   with description "The old fashion school house. To the west, you see a door that looks like it is made out of rocks.", 
   w_to Rocky_Tunnel; 
+ 
+Object -> School_Ghost "School Ghost"
+  with name "ghost" "Bob",
+  with description "The creepy ghost named Bob has haunted the school house for generations.",
+  life [;
+    Attack: print_ret "The ghost gasps in surprise of being attacked. Nobody had dared to even cross paths with him";
+    Kiss: print_ret "You pass right through him and his dog starts barking wildly so you decide to get out of there"; 
+  ],
+  has animate,
+  has male; 
 
 Object Strange_House "Strange House"
   has scenery
   has light
-  with description "A very strange house. To the south, you see a fancy house door.",
+  with description "A very strange house. To the south, you see a fancy house door. To the north, you see a blinding bright portal. It is awfully cold too.",
   s_to Rocky_Tunnel, 
   n_to Winter_Woods; 
 
@@ -221,6 +232,13 @@ Object Ocean "Ocean"
   has light
   with description "The ocean only has a little light as you are in the twilight zone",
   n_to Eiffel_Tower;
+
+Object -> Pearl "Pearl"
+  with name "Pearl",
+  with score_value 5;  
+
+Object -> Seashell "Seashell"
+  with name "Shell";
 
 Object Winter_Woods "Winter Woods"
   has scenery
@@ -247,6 +265,13 @@ Object Basement "Basement"
   u_to Long_Hallway,
   e_to Rocky_Tunnel,
   w_to Tree_House;
+
+Object -> Jar "Jar" 
+  has container
+  has openable
+  with capacity 3,
+  with name "Jar",
+  With description "A small see through jar where you can store small things.";
 
 Object Airlock "Airlock"
   has scenery
