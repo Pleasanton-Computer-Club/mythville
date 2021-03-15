@@ -121,8 +121,63 @@ Object Portal_Room "Portal Room"
   has light
   with description "A Room with four Portals. there is a white portal to the north west, a scarlet portal to the north east, a turquoise portal to the south east, and a dark green to the south west. a glass door stands in the south.",
   s_to Long_Hallway,
+  nw_to Cloudtopia,
+  sw_to Lovely_Forest,
   se_to Tropical_Beach,
   ne_to Volcano;
+
+Object Lovely_Forest "Lovely Forest"
+  has scenery
+  has light
+  with description "A small forest has a few forest critters inside. there is a glade to the south and a portal to the north east.",
+  ne_to Portal_Room,
+  s_to Small_Glade;
+
+Object Small_Glade "Small Glade."
+  has scenery
+  has light
+  with description " a small Glade with only two trees, to the west there is a scary forest, to the north is a lovely forest."
+  n_to Lovely_Forest,
+  w_to Scary_Forest;
+
+Object Scary_Forest "Scary Forest"
+  has scenery
+  has light
+  with description " a forest with dried trees and heavy fog. the only way to escape the nightmare is to go to the east."
+  e_to Small_Glade
+
+Object -> Old_Hag "Old Hag"
+  has female animate
+  with name "Hag"
+  with description "her old wrinkly face has a smirk, but it looks like a friendly smirk. her green eyes and white hair are very think and light. she looks to be about 89 years old."
+  life [;
+       Answer: print_ret "'hello mortal. do not fear me, I have a freindly soul.' you kind of like her by now."
+       Kiss: print_ret "kissing seems like a bad Idea. you probably shouldn't touch her delicate skin."
+       Attack: print_ret "she conjures a green sheild. ' this happens to me all the time!' wow she didn't even care!"
+  ];
+
+Object Cloudtopia "Cloudtopia"
+  has scenery
+  has light
+  with description " a beautifull city of coulds looks like you came to heaven itself! fountians of silver water pour from the fountians and green flora wrap around the clouds. you can see a portal to the south east and an angel mountian to the west.",
+  se_to Portal_Room,
+  w_to Mount_Angel;
+
+Object Mount_Angel "Mt. Angel"
+  has scenery
+  has light
+  with description " Mt. Angel is a mountian made of pure air and ice. a goddess looms over you with a mile wide smile. there is a city to the east.",
+  e_to Cloudtopia;
+
+Object -> Goddess "Goddess"
+  has female animate
+  with name "goddess"
+  with description " her blonde hair is so long, it's like a river. her beautifull white cloak shines in the light. her wings are so strong. they can make a gale."
+  life [;
+       Answer: print_ret "'oh child. your heart is so pure I love how your mind is so full of life.'"
+       Kiss: print_ret "wow. she tastes like your favorite candy!!!"
+       Attack: print_ret "your weapon goes right past her"
+  ];
 
 Object Volcano "Volcano"
   has scenery
@@ -144,7 +199,7 @@ Object -> Drunk_Dwarf "Drunken  Dwarf"
   life [;
        Answer: print_ret " 'Hic*! why young lassie! Hic* I wlecome ye to the Hic* Stone city! HIC*!' yep. he's drunk.";
        kiss: print_ret "he has fresh beer on his lips. you really don't want to get drunk, so you don't kiss him.";
-       Attack: print_ret " you think he deserves this for being slightly rude. you swing your sword but he tips away in the nick of time ARGH!";
+       Attack: print_ret " you think he deserves this for being slightly rude. you swing your weapon but he tips away in the nick of time ARGH!";
   ];
 
 Object Tropical_Beach "Tropical Beach"
