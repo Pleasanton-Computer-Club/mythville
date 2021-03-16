@@ -53,7 +53,7 @@ Object Long_Hallway "Long Hallway"
 Object Abandoned_Library "Abandoned Library"
   has scenery
   has light
-  with description "An old library made 56 years ago. There is cobwebs and ancient books that could be useful for your information. Below you there is a dusty trapdoor. To the north you see an old hallway. The torches are dimly lit so you can see only some light.",
+  with description "An old library made 56 years ago. There are cobwebs and ancient books that could be useful for your information. Below you there is a dusty trapdoor. To the north you see an old hallway. The torches are dimly lit so you can see only some light.",
   se_to Long_Hallway,
   d_to Hidden_Room,
   n_to Old_Hallway;
