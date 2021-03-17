@@ -133,27 +133,27 @@ Object Lovely_Forest "Lovely Forest"
   ne_to Portal_Room,
   s_to Small_Glade;
 
-Object Small_Glade "Small Glade."
+Object Small_Glade "Small Glade"
   has scenery
   has light
-  with description " a small Glade with only two trees, to the west there is a scary forest, to the north is a lovely forest."
-  n_to Lovely_Forest,
+  with description " a small Glade with only two trees, to the west there is a scary forest, to the north is a lovely forest.",
+  n_to Lovely_Forest, 
   w_to Scary_Forest;
 
 Object Scary_Forest "Scary Forest"
   has scenery
   has light
-  with description " a forest with dried trees and heavy fog. the only way to escape the nightmare is to go to the east."
-  e_to Small_Glade
+  with description "A forest with dried trees and heavy fog. the only way to escape the nightmare is to go to the east.",
+  e_to Small_Glade;
 
 Object -> Old_Hag "Old Hag"
   has female animate
   with name "Hag"
-  with description "her old wrinkly face has a smirk, but it looks like a friendly smirk. her green eyes and white hair are very think and light. she looks to be about 89 years old."
+  with description "her old wrinkly face has a smirk, but it looks like a friendly smirk. her green eyes and white hair are very think and light. she looks to be about 89 years old.",
   life [;
-       Answer: print_ret "'hello mortal. do not fear me, I have a freindly soul.' you kind of like her by now."
-       Kiss: print_ret "kissing seems like a bad Idea. you probably shouldn't touch her delicate skin."
-       Attack: print_ret "she conjures a green sheild. ' this happens to me all the time!' wow she didn't even care!"
+       Answer: print_ret "'hello mortal. do not fear me, I have a freindly soul.' you kind of like her by now.";
+       Kiss: print_ret "kissing seems like a bad Idea. you probably shouldn't touch her delicate skin.";
+       Attack: print_ret "she conjures a green sheild. ' this happens to me all the time!' wow she didn't even care!";
   ];
 
 Object Cloudtopia "Cloudtopia"
@@ -172,11 +172,11 @@ Object Mount_Angel "Mt. Angel"
 Object -> Goddess "Goddess"
   has female animate
   with name "goddess"
-  with description " her blonde hair is so long, it's like a river. her beautifull white cloak shines in the light. her wings are so strong. they can make a gale."
+  with description " her blonde hair is so long, it's like a river. her beautifull white cloak shines in the light. her wings are so strong. they can make a gale.",
   life [;
-       Answer: print_ret "'oh child. your heart is so pure I love how your mind is so full of life.'"
-       Kiss: print_ret "wow. she tastes like your favorite candy!!!"
-       Attack: print_ret "your weapon goes right past her"
+       Answer: print_ret "'oh child. your heart is so pure I love how your mind is so full of life.'";
+       Kiss: print_ret "wow. she tastes like your favorite candy!!!";
+       Attack: print_ret "your weapon goes right past her";
   ];
 
 Object Volcano "Volcano"
@@ -262,6 +262,7 @@ Object -> School_Ghost "School Ghost"
   with name "ghost" "Bob",
   with description "The creepy ghost named Bob has haunted the school house for generations.",
   life [;
+    Answer: print_ret "Bob slowly turns around and looks directly at you. You stiffen as he slowly walks towards you. After what seems like forever, he smiles at you.";
     Attack: print_ret "The ghost gasps in surprise of being attacked. Nobody had dared to even cross paths with him";
     Kiss: print_ret "You pass right through him and his dog starts barking wildly so you decide to get out of there"; 
   ],
@@ -290,7 +291,9 @@ Object Ocean "Ocean"
 
 Object -> Pearl "Pearl"
   with name "Pearl",
-  with score_value 5;  
+  has scored,
+  with score_value 5,
+  with description "The pearl is pretty and most likely has value. You decide to keep it.";  
 
 Object -> Seashell "Seashell"
   with name "Shell";
