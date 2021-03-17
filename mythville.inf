@@ -25,18 +25,38 @@ Object -> Backpack "Backpack"
   has openable
   with description "A backpack. It has 5 capacity";
 
+Object -> Water_Bottle "Water_Bottle"
+  with name "bottle",
+  with description "A perfectly good water bottle. Drink it!",
+  before [;
+    Drink: remove self;
+    "Well, that was refreshening.";
+ ];
+
 Object Front_Yard "Front Yard"
   has scenery
   has light
-  with description "A nice and clean front yard. It has bushes, flowers, and grass everywhere. You can hear birds chirping in the distance. There is a giant oak tree placed near the sidewalk, which has many apples on it. To the east you see a church.",
+  with description "A nice and clean front yard. It has bushes, flowers, and grass everywhere. You can hear birds chirping in the distance. There is a giant oak tree placed near the sidewalk, which has many apples on it. To the east you see a church. To the west you see a supermarket.",
   s_to Lobby,
-  e_to Church;
+  e_to Church,
+  w_to Super_Market;
 
 Object Church "Church" 
   has light
   has scenery
   with description "A spiritual church. People pray to the gods for good food, shelter, and more. They perform many rituals there and sing melodious songs.",
   w_to Front_Yard;
+
+Object Super_Market "Super Market"
+  has scenery
+  has light
+  with description "The local supermarket. You see a seller named Joe, who is kindly selling a hot dog for free! You can take one if you want.",
+  e_to Front_Yard;
+
+Object -> Hot_Dog "Hot Dog"
+  with name "food"
+  has edible
+  with description "A delicious hot dog. Come on, eat it!";
  
 Object Long_Hallway "Long Hallway"
   has scenery
@@ -53,11 +73,25 @@ Object Long_Hallway "Long Hallway"
 Object Abandoned_Library "Abandoned Library"
   has scenery
   has light
-  with description "An old library made 56 years ago. There is cobwebs and ancient books that could be useful for your information. Below you there is a dusty trapdoor. To the north you see an old hallway. The torches are dimly lit so you can see only some light.",
+  with description "An old library made 56 years ago. There are cobwebs and ancient books that could be useful for your information. Below you there is a dusty trapdoor. To the north you see an old hallway. The torches are dimly lit so you can see only some light.",
   se_to Long_Hallway,
   d_to Hidden_Room,
   n_to Old_Hallway;
 
+Object -> Zombie_Monk "Zombie Monk"
+  with name "monk" "zombie" "gatso",
+  with description "An ancient monk that had been zombified. He's friendly, though.",
+  life [;
+    Attack: print_ret "The zombie growls in pain. There's no turning back now, as he isn't friendly anymore.";
+    Answer: print_ret "Garbulalurggh blargiflast. Urgilurk. The zombie points to an old hallway. Luckily, you see a Zombulic translator book."; 
+  ],
+  has animate,
+  has male;
+
+Object ->  Zombulic_Translator_Book "Zombulic Translator Book"
+  with name "translator" 
+  with description "Urggh = nothing - sound of a zombie. Burg = hello.  Blar = old. Garb = that. Ula = is the. Harg = here. Giflast = hallway. Lurk = there. Urg = go.";
+ 
 Object Hidden_Room "Hidden Room" 
   has scenery
   has light
@@ -107,9 +141,65 @@ Object Meditation_Room "Meditation Room"
 Object Spirit_World "Spirit World"
   has scenery
   has light
-  with description "The happy and bright spirit world! You see ghouls, spirits, humans, and all of the dead play board games, dance, and sing together around in harmony. You see everyone gathers around as their leader, Anubis, sings a melodic anthem to the whole crowd.",
-  s_to Meditation_Room;
- 
+  with description "The happy and bright spirit world! You see ghouls, spirits, humans, and all of the dead play board games, dance, and sing together around in harmony. You see everyone gathers around as their leader, Anubis, sings a melodic anthem to the whole crowd. To the east, you see the Flat Plains.",
+  s_to Meditation_Room,
+  e_to Flat_Plains;
+
+Object -> Ghoul "Ghoul"
+  with name "ghoul" "ghost" "spirit",
+  with description "A friendly ghoul from the Spirit World.",
+  life [;
+    Attack: print_ret "The ghoul makes a sad face and starts to cry. Soon the entire people of the Spirit world look at you, and you smile sheepishly. Then you say that your very sorry, and will not do it again, and they let it slip.";
+    Kiss: print_ret "The ghoul seems amused now, but also very surprised. She runs off to dance with the other spirits, but not after she sends you a little air kiss.";
+],
+has animate,
+has female;
+
+Object -> Spirit_Artifact "Spirit Artifact"
+  with name "artifact" "object"
+  has scored
+  with score_value 10
+  with description "An ancient spirit artifact made by the first ghosts themselves. You get 4 points!";
+
+Object Flat_Plains "Flat Plains"
+  has scenery
+  has light
+  with description "The beautiful Flat Plains in the Spirit World. You see some lovely flowers, roses, bushes, and more. But soon you look at a dark cave looming in the distance. It's on the northeast side. Do you go in?",
+  w_to Spirit_World,
+  ne_to Dark_Cave;
+
+Object Dark_Cave "Dark Cave"
+  has scenery 
+  has light
+  with description "A dark and gloomy cave. You can barely see anything. You do see some white objects though. But when you reach the end of the cavern, you look up to see a ten-foot tall monster with a huge club. You realize the white things were bones and skulls. It's a Spirit Monster!",
+  before [; Go:
+           if (noun == sw_obj && Spirit_Monster in Dark_Cave) {
+             ! tried to go southwest
+             print "It's too late! You go southwest but the Spirit Monster blocks you! 'HAH HAH HAH,' he says.";
+             return true;
+           } else {
+             ! tried to go anywhere else, let them go
+             return false;
+           }
+        ],
+  sw_to Flat_Plains;
+
+Object -> Spirit_Monster "Spirit Monster"
+  with name "monster" "spirit",
+  with description "A huge Spirit Monster! He's terrifying, with huge teeth and an enourmous club. But you already know that. Anyways, you try to think of a plan to defeat him. What will you do?",
+  life [;
+    Attack: 
+     if (Sword in player) {
+           print "You're lucky you visited the Training Room. You swing your sword, but he just laughs and kicks you aside. 'OW!'";
+           return true;
+         } else {
+           print "You punch him in the gut, but obviously that doesn't do anything. 'Ha, Ha, Ha,' the monster says. 'You should have gotten a sword or something.'";
+           return true;
+         }
+],
+has animate,
+has male;
+
 Object Center_of_the_Community "Center of the community"
   has scenery
   has light
@@ -137,7 +227,7 @@ Object Small_Glade "Small Glade"
   has scenery
   has light
   with description " a small Glade with only two trees, to the west there is a scary forest, to the north is a lovely forest.",
-  n_to Lovely_Forest, 
+  n_to Lovely_Forest,
   w_to Scary_Forest;
 
 Object Scary_Forest "Scary Forest"
@@ -148,7 +238,7 @@ Object Scary_Forest "Scary Forest"
 
 Object -> Old_Hag "Old Hag"
   has female animate
-  with name "Hag"
+  with name "Hag",
   with description "her old wrinkly face has a smirk, but it looks like a friendly smirk. her green eyes and white hair are very think and light. she looks to be about 89 years old.",
   life [;
        Answer: print_ret "'hello mortal. do not fear me, I have a freindly soul.' you kind of like her by now.";
@@ -171,7 +261,7 @@ Object Mount_Angel "Mt. Angel"
 
 Object -> Goddess "Goddess"
   has female animate
-  with name "goddess"
+  with name "goddess",
   with description " her blonde hair is so long, it's like a river. her beautifull white cloak shines in the light. her wings are so strong. they can make a gale.",
   life [;
        Answer: print_ret "'oh child. your heart is so pure I love how your mind is so full of life.'";
@@ -351,4 +441,5 @@ Object -> Space_Boot "Boot"
   with name "boot";
 
 Object -> Space_Helmet "Helmet"
+  with wear
   with name "helmet";
