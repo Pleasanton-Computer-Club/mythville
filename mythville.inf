@@ -18,6 +18,25 @@ Object Lobby "The starting lobby"
   w_to Long_Hallway,
   n_to Front_Yard;
 
+Object -> Blender "blender"
+  has container openable switchable animate
+  with name "blender",
+  enchantment_level 0,
+  before [;
+    Examine: print "a Cuisinart brand blender";
+    if (self.enchantment_level == 0) {
+      "^The blender looks very ordinary";
+    } else if (self.enchantment_level < 10) {
+      "^The blender glows with a soft blue light";
+    } else if (self.enchantment_level < 20) {
+      "^The blender shines with a vibrant white light";
+    };
+    Rub: 
+      self.enchantment_level = self.enchantment_level + 1;
+      print_ret "You rub the blender for good luck. You feel the blender become more magical!";
+  ],
+  with description "a Cuisinart brand blender";
+
 Object -> Backpack "Backpack"
   with name "backpack"
   with capacity 5
@@ -223,7 +242,7 @@ Object Lovely_Forest "Lovely Forest"
   ne_to Portal_Room,
   s_to Small_Glade;
 
-Object Small_Glade "Small Glade."
+Object Small_Glade "Small Glade"
   has scenery
   has light
   with description " a small Glade with only two trees, to the west there is a scary forest, to the north is a lovely forest.",
@@ -233,7 +252,7 @@ Object Small_Glade "Small Glade."
 Object Scary_Forest "Scary Forest"
   has scenery
   has light
-  with description " a forest with dried trees and heavy fog. the only way to escape the nightmare is to go to the east.",
+  with description "A forest with dried trees and heavy fog. the only way to escape the nightmare is to go to the east.",
   e_to Small_Glade;
 
 Object -> Old_Hag "Old Hag"
@@ -352,6 +371,7 @@ Object -> School_Ghost "School Ghost"
   with name "ghost" "Bob",
   with description "The creepy ghost named Bob has haunted the school house for generations.",
   life [;
+    Answer: print_ret "Bob slowly turns around and looks directly at you. You stiffen as he slowly walks towards you. After what seems like forever, he smiles at you.";
     Attack: print_ret "The ghost gasps in surprise of being attacked. Nobody had dared to even cross paths with him";
     Kiss: print_ret "You pass right through him and his dog starts barking wildly so you decide to get out of there"; 
   ],
@@ -380,7 +400,9 @@ Object Ocean "Ocean"
 
 Object -> Pearl "Pearl"
   with name "Pearl",
-  with score_value 5;  
+  has scored,
+  with score_value 5,
+  with description "The pearl is pretty and most likely has value. You decide to keep it.";  
 
 Object -> Seashell "Seashell"
   with name "Shell";
