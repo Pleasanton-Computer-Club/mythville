@@ -18,6 +18,25 @@ Object Lobby "The starting lobby"
   w_to Long_Hallway,
   n_to Front_Yard;
 
+Object -> Blender "blender"
+  has container openable switchable animate
+  with name "blender",
+  enchantment_level 0,
+  before [;
+    Examine: print "a Cuisinart brand blender";
+    if (self.enchantment_level == 0) {
+      "^The blender looks very ordinary";
+    } else if (self.enchantment_level < 10) {
+      "^The blender glows with a soft blue light";
+    } else if (self.enchantment_level < 20) {
+      "^The blender shines with a vibrant white light";
+    };
+    Rub: 
+      self.enchantment_level = self.enchantment_level + 1;
+      print_ret "You rub the blender for good luck. You feel the blender become more magical!";
+  ],
+  with description "a Cuisinart brand blender";
+
 Object -> Backpack "Backpack"
   with name "backpack"
   with capacity 5
