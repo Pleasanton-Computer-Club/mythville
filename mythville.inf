@@ -37,6 +37,22 @@ Object -> Blender "blender"
   ],
   with description "a Cuisinart brand blender";
 
+Object -> Magic_Meter "magic meter"
+  with name "meter",
+  before [;
+    Examine: print "You peer into the magic meter.";
+    if (Blender.enchantment_level == 0) {
+      print_ret "^The blender isn't enchanted at all. Enchantment level 0";
+    } else if (Blender.enchantment_level < 10) {
+      print "^The blender is a little bit enchanted, level: ";
+      print_ret Blender.enchantment_level;
+    } else {
+      print "^The blender is highly enchanted, level: ";
+      print_ret Blender.enchantment_level;
+    }
+  ],
+  with description "A magic meter which reads the magic levels of nearby enchanted blenders.";
+
 Object -> Backpack "Backpack"
   with name "backpack"
   with capacity 5
