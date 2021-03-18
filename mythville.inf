@@ -25,7 +25,7 @@ Object -> Backpack "Backpack"
   has openable
   with description "A backpack. It has 5 capacity";
 
-Object -> Water_Bottle "Water_Bottle"
+Object -> Water_Bottle "Water Bottle"
   with name "bottle",
   with description "A perfectly good water bottle. Drink it!",
   before [;
