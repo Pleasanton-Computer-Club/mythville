@@ -41,13 +41,14 @@ Object Church "Church"
 Object Long_Hallway "Long Hallway"
   has scenery
   has light
-  with description "A long hallway with many doors. To the east you see a white door. To the north you see a glass door. On the ceiling you see a colorful portal. On the floor
- you see a wooden trap door. To the northwest you see an abandoned library. To the southwest you see a steel airlock. To the west stood a beautiful door with branches of trees covering the top. Looking to the southeast, you find a metal door with a galatic symbol carved into it.",
+  with description "A long hallway with many doors. To the east you see a white door. To the north you see a glass door. On the ceiling you see a colorful portal. On the floor you see a wooden trap door. To the northwest you see an abandoned library. To the southwest you see a steel airlock. To the west stood a beautiful stone door with branches of trees covering the top. Looking to the southeast, you find a metal door with a galatic symbol carved into it, Space!",
   u_to Center_of_the_Community,
   nw_to Abandoned_Library,
   d_to Basement,
   n_to Portal_Room,
   sw_to Airlock,
+  w_to Enchanted_Garden,
+  se_to Space,
   e_to Lobby;
 
 Object Abandoned_Library "Abandoned Library"
@@ -353,12 +354,13 @@ Object -> Space_Helmet "Helmet"
 Object Enchanted_Garden "Enchanted Garden"
   has scenery,
   has light,
-  with description "The Enchanted Garden, a very magical garden. There are beautiful, colorful trees, plants, and plowers. There are berries accross bushes. You find a small, cute little rabbit that hurt it back foot, some very yummy looking berries, a violin, a gorgeous bag with flowers printed on it, and a small bottle with a "Drink Me" sign on it. Looking to the South, you see a door smaller than you, and another door to the North with a rainbow ribbon tied to it.",
-s_to Small_door
-n_to Rainbow Ribbon Gateway;
+  with description "The Enchanted Garden, a very magical garden. There are beautiful, colorful trees, plants, and plowers. There are berries accross bushes. You find a small, cute little rabbit that hurt it back foot, some very yummy looking berries, a violin, a gorgeous bag with flowers printed on it, and a small bottle with a 'Gulp me' sign on it. Looking to the South, you see a Small Door and another gateway to the north titled 'Rainbow Ribbon Gateway'.",
+s_to Small_door,
+n_to Rainbow_Ribbon_Gateway;
 
 Object -> Bunny "Bunny"
-  with name "bunny";
+  with name "bunny",
+  has scored;
 
 Object -> Yummy_Berries "Berries"
   with name "berries";
@@ -367,7 +369,51 @@ Object -> Violin "Violin"
   with name "violin";
 
 Object -> Flower_themed_bag "Bag"
-  with name "bag";
+  has container ,
+  has openable,
+  with capacity 20,
+  with name "bag"
+  with description "A cute little bag made of leathers and fabrics.";
 
-Object -> Shrinking_potion "bottle"
+Object -> Gulp_Me "bottle"
   with name "bottle";
+
+Object Small_door "Small door"
+  has scenery,
+  has light,
+  with description "It was an interesting room with 2 doors. One was unlocked door and locked door.";
+
+Object Rainbow_Ribbon_Gateway
+  has scenery,
+  has light,
+  with description "A beautiful rainbow gateway. Up in the clouds, you see birds chirping in harmony, and right in the center of the rainbow you see an elegant gate entrance, plastered with multi-colors and a key lock. You don't know how to open the gate until a bird swoops down towards you and drops a rainbow-colored key. You unlock the gate, and you see a living city of fairies, angels, pixies, all on the soft clouds of the sky. You see a rainbow cake, rainbow rocks, rainbow cotton candy, and a cloud shaped key with a fluffy texture with a tag reading 'cloud key'";
+
+Object -> Rainbow_cake "Cake"
+  has edible, 
+  with name "cake";
+
+Object -> Rainbow_rocks "Rocks"
+  with name "rocks";
+
+Object -> Rainbow_Cotton_Candy "Candy"
+  has edible,
+  with name "candy";
+
+Object -> Cloud_Key "Cloud_Key"
+  has scored,
+  with name "Cloud_key";
+
+Object Space "Space"
+  has scenery,
+  has light,
+  with description "Space! You see Mars, Pluto, Uranus, many astroids and commets, and a gigantic building to the east. It's an amusement park, with a sign saying 'Space Station.' You see a dusty, golden key but you don't know what it's for.",
+  e_to Space_Station_Amusement_Park;
+
+Object -> Gold_Key "Gold_Key"
+  has scored,
+  with name "Gold_Key";
+
+Object Space_Station_Amusement_Park "Space Station"
+  has scenery,
+  has light,
+  with description "You enter the building and see a huge board reading, 'This is the SpaceStation. Here you can have all the fun you want. Explore the place because there are more rides than you see. Have fun and stay safe :D'";
