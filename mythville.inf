@@ -42,7 +42,7 @@ Object Long_Hallway "Long Hallway"
   has scenery
   has light
   with description "A long hallway with many doors. To the east you see a white door. To the north you see a glass door. On the ceiling you see a colorful portal. On the floor
- you see a wooden trap door. To the northwest you see an abandoned library. To the southwest you see a steel airlock.",
+ you see a wooden trap door. To the northwest you see an abandoned library. To the southwest you see a steel airlock. To the west stood a beautiful door with branches of trees covering the top. Looking to the southeast, you find a metal door with a galatic symbol carved into it.",
   u_to Center_of_the_Community,
   nw_to Abandoned_Library,
   d_to Basement,
@@ -349,3 +349,25 @@ Object -> Space_Boot "Boot"
 
 Object -> Space_Helmet "Helmet"
   with name "helmet";
+
+Object Enchanted_Garden "Enchanted Garden"
+  has scenery,
+  has light,
+  with description "The Enchanted Garden, a very magical garden. There are beautiful, colorful trees, plants, and plowers. There are berries accross bushes. You find a small, cute little rabbit that hurt it back foot, some very yummy looking berries, a violin, a gorgeous bag with flowers printed on it, and a small bottle with a "Drink Me" sign on it. Looking to the South, you see a door smaller than you, and another door to the North with a rainbow ribbon tied to it.",
+s_to Small_door
+n_to Rainbow Ribbon Gateway;
+
+Object -> Bunny "Bunny"
+  with name "bunny";
+
+Object -> Yummy_Berries "Berries"
+  with name "berries";
+
+Object -> Violin "Violin"
+  with name "violin";
+
+Object -> Flower_themed_bag "Bag"
+  with name "bag";
+
+Object -> Shrinking_potion "bottle"
+  with name "bottle";
