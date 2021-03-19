@@ -118,9 +118,9 @@ Object Hidden_Room "Hidden Room"
   u_to Abandoned_Library;
 
 Object -> Enchanted_Book "Enchanted Book"
-  with name "book"
-  with description "Smite: Use the Smite Enchantment by reaching your sword up into the clouds and calling for the lightning. The lighning will soon come down and charge your weapon with electricity. Use this to smite one of your enemies. Note: Only works in a thunderstorm.";
- 
+  with name "book",
+  with description "Smite: Use the Smite Enchantment by reaching your sword up into the clouds and calling for the lightning. The lighning will soon come down and charge your weapon with electricity. Use this to smite one of your enemies. Note: Rub on weapon to activate enchantment.";
+
 Object Old_Hallway "Old Hallway"
   has scenery
   has light
@@ -137,7 +137,22 @@ Object Training_Room "Training Room"
   w_to Old_Hallway;
 
 Object -> Sword "Sword"
-  with name "Sword"
+  with name "Sword",
+  with smite_enchantment_level 0,
+  before [;
+    Examine: print "A fine and clean sword.";    
+    if (self.smite_enchantment_level == 0) {
+      "^The Sword is unenchanted.";
+    } else if (self.smite_enchantment_level > 0) {
+      "^The Sword is enchanted with Smite";
+    };
+    Rub:
+    if (Enchanted_Book in player) {
+           self.smite_enchantment_level = self.smite_enchantment_level + 1;
+           remove Enchanted_Book;
+           print_ret "You enchant the sword, and the Smite level is increased!";
+        }
+],
   with description "Never give up without a fight.";
 
 Object Reading_Room "Reading Room"
@@ -207,14 +222,27 @@ Object -> Spirit_Monster "Spirit Monster"
   with name "monster" "spirit",
   with description "A huge Spirit Monster! He's terrifying, with huge teeth and an enourmous club. But you already know that. Anyways, you try to think of a plan to defeat him. What will you do?",
   life [;
-    Attack: 
-     if (Sword in player) {
+    Attack:
+      if (Sword in player && Sword.smite_enchantment_level > 0) {
+           print "You lift up your Sword and call for the lightning...  Suddenly, a burst of lightning shoots down, makes a smoking hole in the cave, and charges your sword. You jump as high as you can and strike the Spirit Monster with all your might. You hear him howl in pain as he disintegrates into a pile of ash. You look at the ash, and walk out of the room.";
+           remove self;
+           return true;
+     } else if (Sword in player) {
            print "You're lucky you visited the Training Room. You swing your sword, but he just laughs and kicks you aside. 'OW!'";
            return true;
          } else {
            print "You punch him in the gut, but obviously that doesn't do anything. 'Ha, Ha, Ha,' the monster says. 'You should have gotten a sword or something.'";
            return true;
-         }
+         };
+    Kiss:
+      if (Sword in player && Sword.smite_enchantment_level > 0 ) {
+           print "'Yuck!' The Spirit Monster looks at you in disgust and smacks you with his club so hard you crash into the wall, which cracks deeply and almost breaks. You get up groggily, but still have some strength.";
+           return true;
+     } else if (Sword in player) {
+           print "You suddenly leap up onto the Spirit Monster's chest. He flails around, trying to smack you, but you climb up to his head and kiss him on the lips. He is so surprised that he drops his club. You use this distraction to smack him with your Sword and he tips over, falling town with a great big thud. As they say, the bigger they are, the harder they fall.";
+           remove self;
+           return true;
+        }
 ],
 has animate,
 has male;
