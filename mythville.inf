@@ -18,24 +18,24 @@ Object Lobby "The starting lobby"
   w_to Long_Hallway,
   n_to Front_Yard;
 
-Object -> Blender "blender"
-  has container openable switchable animate
+Object -> Blender "Blender"
+  has container openable switchable
   with name "blender",
   enchantment_level 0,
   before [;
-    Examine: print "a Cuisinart brand blender";
+    Examine: print "a Cuisinart brand blender.";
     if (self.enchantment_level == 0) {
-      "^The blender looks very ordinary";
+      "^The blender looks very ordinary.";
     } else if (self.enchantment_level < 10) {
-      "^The blender glows with a soft blue light";
+      "^The blender glows with a soft blue light.";
     } else if (self.enchantment_level < 20) {
-      "^The blender shines with a vibrant white light";
+      "^The blender shines with a vibrant white light.";
     };
     Rub: 
       self.enchantment_level = self.enchantment_level + 1;
       print_ret "You rub the blender for good luck. You feel the blender become more magical!";
   ],
-  with description "a Cuisinart brand blender";
+  with description "a Cuisinart brand blender.";
 
 Object -> Backpack "Backpack"
   with name "backpack"
@@ -211,12 +211,17 @@ Object Dark_Cave "Dark Cave"
              ! tried to go southwest
              print "It's too late! You go southwest but the Spirit Monster blocks you! 'HAH HAH HAH,' he says.";
              return true;
+           } else if (noun == n_obj && Spirit_Monster in Dark_Cave) {
+             ! tried to go west
+             print "You can't go that way.";
+             return true;
            } else {
              ! tried to go anywhere else, let them go
              return false;
            }
         ],
-  sw_to Flat_Plains;
+  sw_to Flat_Plains,
+  n_to Treasure_Room;
 
 Object -> Spirit_Monster "Spirit Monster"
   with name "monster" "spirit",
@@ -224,14 +229,14 @@ Object -> Spirit_Monster "Spirit Monster"
   life [;
     Attack:
       if (Sword in player && Sword.smite_enchantment_level > 0) {
-           print "You lift up your Sword and call for the lightning...  Suddenly, a burst of lightning shoots down, makes a smoking hole in the cave, and charges your sword. You jump as high as you can and strike the Spirit Monster with all your might. You hear him howl in pain as he disintegrates into a pile of ash. You look at the ash, and walk out of the room.";
+           print "You lift up your Sword and call for the lightning...  Suddenly, a burst of lightning shoots down, makes a smoking hole in the cave, and charges your sword. You jump as high as you can and strike the Spirit Monster with all your might. You hear him howl in pain as he disintegrates into a pile of ash. Everythng's smoking. But soon the smoke fades away, to reveal, a treasure room? It's on the north!";
            remove self;
            return true;
      } else if (Sword in player) {
            print "You're lucky you visited the Training Room. You swing your sword, but he just laughs and kicks you aside. 'OW!'";
            return true;
          } else {
-           print "You punch him in the gut, but obviously that doesn't do anything. 'Ha, Ha, Ha,' the monster says. 'You should have gotten a sword or something.'";
+           print "You punch him in the gut, but obviously that doesn't do anything. 'Ha, Ha' the monster says. 'You should have gotten a sword or something.'";
            return true;
          };
     Kiss:
@@ -239,13 +244,26 @@ Object -> Spirit_Monster "Spirit Monster"
            print "'Yuck!' The Spirit Monster looks at you in disgust and smacks you with his club so hard you crash into the wall, which cracks deeply and almost breaks. You get up groggily, but still have some strength.";
            return true;
      } else if (Sword in player) {
-           print "You suddenly leap up onto the Spirit Monster's chest. He flails around, trying to smack you, but you climb up to his head and kiss him on the lips. He is so surprised that he drops his club. You use this distraction to smack him with your Sword and he tips over, falling town with a great big thud. As they say, the bigger they are, the harder they fall.";
+           print "You suddenly leap up onto the Spirit Monster's chest. He flails around, trying to smack you, but you climb up to his head and kiss him on the lips. He is so surprised that he drops his club. You use this distraction to smack him with your Sword and he tips over, falling town with a great big thud. As they say, the bigger they are, the harder they fall. But when you walk down, you see a shining room to the north. What could it be?";
            remove self;
            return true;
         }
 ],
 has animate,
 has male;
+
+Object Treasure_Room "Treasure Room"
+  has scenery scored light
+  with description "Good job killing the Spirit Monster! You get 5 points. You see a lot of loot and gold everywhere, with many gemstones including, emeralds, rubies, and more. But stuck to the center of the wall is a mini-case on a little platform. You open it and you see...  a beautiful diamond! Diamonds are very, very valuable and expensive in the town that you live in. So now that you see all the treasure, go on, take it!",
+  s_to Dark_Cave;
+
+Object -> Diamond "Diamond"
+  with name "diamond" "gem" "jewel"
+  with description "A beautiful shining diamond. This can be used in many cases!";
+
+Object -> Gold_Bag "Gold Bag"
+  with name "gold" "bag" "metal"
+  with description "A gold bag with many gold bars. You can use this to purchase a lot of items!";
 
 Object Center_of_the_Community "Center of the community"
   has scenery
