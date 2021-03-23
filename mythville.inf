@@ -11,7 +11,7 @@ Include "grammar";
   location = Lobby;
 ];
 
-Object Lobby "The starting lobby"
+Object Lobby "starting lobby"
   has scenery
   has light
   with description "A white room. To the west you see a long hallway. To the north you see a gate.",
@@ -521,7 +521,8 @@ Object -> Jar "Jar"
 Object Airlock "Airlock"
   has scenery
   has light
-  with description "A futuristic airlock",
+  with description "A futuristic airlock. A door to the south leads deeper into the space ship.",
+  s_to Transporter_Room,
   ne_to Long_Hallway;
 
 Object -> Space_Bag "Space Bag"
@@ -540,3 +541,42 @@ Object -> Space_Boot "Boot"
 Object -> Space_Helmet "Helmet"
   with wear
   with name "helmet";
+
+Object Transporter_Room "transporter room"
+  has light scenery
+  with description "A small room leading to the interior of the ship. Nearby stands a circular pad, glowing with a soft blue light. Next to the pad is a control panel containing a set of buttons and labels.",
+  n_to Airlock;
+
+Object -> Transporter_Pad "transporter pad"
+  has supporter enterable static,
+  with name "pad" "pads" "transporter",
+  with description "A star-trek style transporter pad. It glows with a soft blue light.";
+
+Object -> Red_Transporter_Button "red transporter button"
+  has static,
+  with name "red" "button",
+  before [;
+    Push:
+      if (parent(player) == Transporter_Pad) {
+        move player to Lobby;
+        print_ret "You shimmer out of existence, rematerializing somewhere else entirely!";
+      } else {
+        print_ret "The air over the transporter pad briefly shimmers.";
+      }
+  ],
+  with description "A red button labeled 'Lobby'";
+
+Object -> Green_Transporter_Button "green transporter button"
+  has static,
+  with name "green" "button",
+  before [;
+    Push:
+      if (parent(player) == Transporter_Pad) {
+        move player to Mount_Angel;
+        print_ret "You shimmer out of existence, rematerializing somewhere else entirely!";
+      } else {
+        print_ret "The air over the transporter pad briefly shimmers.";
+      }
+  ],
+  with description "A green button labeled 'Mount Angel'";
+
