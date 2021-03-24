@@ -11,12 +11,47 @@ Include "grammar";
   location = Lobby;
 ];
 
-Object Lobby "The starting lobby"
+Object Lobby "starting lobby"
   has scenery
   has light
   with description "A white room. To the west you see a long hallway. To the north you see a gate.",
   w_to Long_Hallway,
   n_to Front_Yard;
+
+Object -> Blender "Blender"
+  has container openable switchable
+  with name "blender",
+  enchantment_level 0,
+  before [;
+    Examine: print "a Cuisinart brand blender.";
+    if (self.enchantment_level == 0) {
+      "^The blender looks very ordinary.";
+    } else if (self.enchantment_level < 10) {
+      "^The blender glows with a soft blue light.";
+    } else if (self.enchantment_level < 20) {
+      "^The blender shines with a vibrant white light.";
+    };
+    Rub: 
+      self.enchantment_level = self.enchantment_level + 1;
+      print_ret "You rub the blender for good luck. You feel the blender become more magical!";
+  ],
+  with description "a Cuisinart brand blender.";
+
+Object -> Magic_Meter "magic meter"
+  with name "meter",
+  before [;
+    Examine: print "You peer into the magic meter.";
+    if (Blender.enchantment_level == 0) {
+      print_ret "^The blender isn't enchanted at all. Enchantment level 0";
+    } else if (Blender.enchantment_level < 10) {
+      print "^The blender is a little bit enchanted, level: ";
+      print_ret Blender.enchantment_level;
+    } else {
+      print "^The blender is highly enchanted, level: ";
+      print_ret Blender.enchantment_level;
+    }
+  ],
+  with description "A magic meter which reads the magic levels of nearby enchanted blenders.";
 
 Object -> Backpack "Backpack"
   with name "backpack"
@@ -25,18 +60,38 @@ Object -> Backpack "Backpack"
   has openable
   with description "A backpack. It has 5 capacity";
 
+Object -> Water_Bottle "Water Bottle"
+  with name "bottle",
+  with description "A perfectly good water bottle. Drink it!",
+  before [;
+    Drink: remove self;
+    "Well, that was refreshening.";
+ ];
+
 Object Front_Yard "Front Yard"
   has scenery
   has light
-  with description "A nice and clean front yard. It has bushes, flowers, and grass everywhere. You can hear birds chirping in the distance. There is a giant oak tree placed near the sidewalk, which has many apples on it. To the east you see a church.",
+  with description "A nice and clean front yard. It has bushes, flowers, and grass everywhere. You can hear birds chirping in the distance. There is a giant oak tree placed near the sidewalk, which has many apples on it. To the east you see a church. To the west you see a supermarket.",
   s_to Lobby,
-  e_to Church;
+  e_to Church,
+  w_to Super_Market;
 
 Object Church "Church" 
   has light
   has scenery
   with description "A spiritual church. People pray to the gods for good food, shelter, and more. They perform many rituals there and sing melodious songs.",
   w_to Front_Yard;
+
+Object Super_Market "Super Market"
+  has scenery
+  has light
+  with description "The local supermarket. You see a seller named Joe, who is kindly selling a hot dog for free! You can take one if you want.",
+  e_to Front_Yard;
+
+Object -> Hot_Dog "Hot Dog"
+  with name "food"
+  has edible
+  with description "A delicious hot dog. Come on, eat it!";
  
 Object Long_Hallway "Long Hallway"
   has scenery
@@ -59,6 +114,20 @@ Object Abandoned_Library "Abandoned Library"
   d_to Hidden_Room,
   n_to Old_Hallway;
 
+Object -> Zombie_Monk "Zombie Monk"
+  with name "monk" "zombie" "gatso",
+  with description "An ancient monk that had been zombified. He's friendly, though.",
+  life [;
+    Attack: print_ret "The zombie growls in pain. There's no turning back now, as he isn't friendly anymore.";
+    Answer: print_ret "Garbulalurggh blargiflast. Urgilurk. The zombie points to an old hallway. Luckily, you see a Zombulic translator book."; 
+  ],
+  has animate,
+  has male;
+
+Object ->  Zombulic_Translator_Book "Zombulic Translator Book"
+  with name "translator" 
+  with description "Urggh = nothing - sound of a zombie. Burg = hello.  Blar = old. Garb = that. Ula = is the. Harg = here. Giflast = hallway. Lurk = there. Urg = go.";
+ 
 Object Hidden_Room "Hidden Room" 
   has scenery
   has light
@@ -66,9 +135,9 @@ Object Hidden_Room "Hidden Room"
   u_to Abandoned_Library;
 
 Object -> Enchanted_Book "Enchanted Book"
-  with name "book"
-  with description "Smite: Use the Smite Enchantment by reaching your sword up into the clouds and calling for the lightning. The lighning will soon come down and charge your weapon with electricity. Use this to smite one of your enemies. Note: Only works in a thunderstorm.";
- 
+  with name "book",
+  with description "Smite: Use the Smite Enchantment by reaching your sword up into the clouds and calling for the lightning. The lighning will soon come down and charge your weapon with electricity. Use this to smite one of your enemies. Note: Rub on weapon to activate enchantment.";
+
 Object Old_Hallway "Old Hallway"
   has scenery
   has light
@@ -85,7 +154,22 @@ Object Training_Room "Training Room"
   w_to Old_Hallway;
 
 Object -> Sword "Sword"
-  with name "Sword"
+  with name "Sword",
+  with smite_enchantment_level 0,
+  before [;
+    Examine: print "A fine and clean sword.";    
+    if (self.smite_enchantment_level == 0) {
+      "^The Sword is unenchanted.";
+    } else if (self.smite_enchantment_level > 0) {
+      "^The Sword is enchanted with Smite";
+    };
+    Rub:
+    if (Enchanted_Book in player) {
+           self.smite_enchantment_level = self.smite_enchantment_level + 1;
+           remove Enchanted_Book;
+           print_ret "You enchant the sword, and the Smite level is increased!";
+        }
+],
   with description "Never give up without a fight.";
 
 Object Reading_Room "Reading Room"
@@ -108,9 +192,96 @@ Object Meditation_Room "Meditation Room"
 Object Spirit_World "Spirit World"
   has scenery
   has light
-  with description "The happy and bright spirit world! You see ghouls, spirits, humans, and all of the dead play board games, dance, and sing together around in harmony. You see everyone gathers around as their leader, Anubis, sings a melodic anthem to the whole crowd.",
-  s_to Meditation_Room;
- 
+  with description "The happy and bright spirit world! You see ghouls, spirits, humans, and all of the dead play board games, dance, and sing together around in harmony. You see everyone gathers around as their leader, Anubis, sings a melodic anthem to the whole crowd. To the east, you see the Flat Plains.",
+  s_to Meditation_Room,
+  e_to Flat_Plains;
+
+Object -> Ghoul "Ghoul"
+  with name "ghoul" "ghost" "spirit",
+  with description "A friendly ghoul from the Spirit World.",
+  life [;
+    Attack: print_ret "The ghoul makes a sad face and starts to cry. Soon the entire people of the Spirit world look at you, and you smile sheepishly. Then you say that your very sorry, and will not do it again, and they let it slip.";
+    Kiss: print_ret "The ghoul seems amused now, but also very surprised. She runs off to dance with the other spirits, but not after she sends you a little air kiss.";
+],
+has animate,
+has female;
+
+Object -> Spirit_Artifact "Spirit Artifact"
+  with name "artifact" "object"
+  has scored
+  with score_value 10
+  with description "An ancient spirit artifact made by the first ghosts themselves. You get 4 points!";
+
+Object Flat_Plains "Flat Plains"
+  has scenery
+  has light
+  with description "The beautiful Flat Plains in the Spirit World. You see some lovely flowers, roses, bushes, and more. But soon you look at a dark cave looming in the distance. It's on the northeast side. Do you go in?",
+  w_to Spirit_World,
+  ne_to Dark_Cave;
+
+Object Dark_Cave "Dark Cave"
+  has scenery 
+  has light
+  with description "A dark and gloomy cave. You can barely see anything. You do see some white objects though. But when you reach the end of the cavern, you look up to see a ten-foot tall monster with a huge club. You realize the white things were bones and skulls. It's a Spirit Monster!",
+  before [; Go:
+           if (noun == sw_obj && Spirit_Monster in Dark_Cave) {
+             ! tried to go southwest
+             print "It's too late! You go southwest but the Spirit Monster blocks you! 'HAH HAH HAH,' he says.";
+             return true;
+           } else if (noun == n_obj && Spirit_Monster in Dark_Cave) {
+             ! tried to go west
+             print "You can't go that way.";
+             return true;
+           } else {
+             ! tried to go anywhere else, let them go
+             return false;
+           }
+        ],
+  sw_to Flat_Plains,
+  n_to Treasure_Room;
+
+Object -> Spirit_Monster "Spirit Monster"
+  with name "monster" "spirit",
+  with description "A huge Spirit Monster! He's terrifying, with huge teeth and an enourmous club. But you already know that. Anyways, you try to think of a plan to defeat him. What will you do?",
+  life [;
+    Attack:
+      if (Sword in player && Sword.smite_enchantment_level > 0) {
+           print "You lift up your Sword and call for the lightning...  Suddenly, a burst of lightning shoots down, makes a smoking hole in the cave, and charges your sword. You jump as high as you can and strike the Spirit Monster with all your might. You hear him howl in pain as he disintegrates into a pile of ash. Everythng's smoking. But soon the smoke fades away, to reveal, a treasure room? It's on the north!";
+           remove self;
+           return true;
+     } else if (Sword in player) {
+           print "You're lucky you visited the Training Room. You swing your sword, but he just laughs and kicks you aside. 'OW!'";
+           return true;
+         } else {
+           print "You punch him in the gut, but obviously that doesn't do anything. 'Ha, Ha' the monster says. 'You should have gotten a sword or something.'";
+           return true;
+         };
+    Kiss:
+      if (Sword in player && Sword.smite_enchantment_level > 0 ) {
+           print "'Yuck!' The Spirit Monster looks at you in disgust and smacks you with his club so hard you crash into the wall, which cracks deeply and almost breaks. You get up groggily, but still have some strength.";
+           return true;
+     } else if (Sword in player) {
+           print "You suddenly leap up onto the Spirit Monster's chest. He flails around, trying to smack you, but you climb up to his head and kiss him on the lips. He is so surprised that he drops his club. You use this distraction to smack him with your Sword and he tips over, falling town with a great big thud. As they say, the bigger they are, the harder they fall. But when you walk down, you see a shining room to the north. What could it be?";
+           remove self;
+           return true;
+        }
+],
+has animate,
+has male;
+
+Object Treasure_Room "Treasure Room"
+  has scenery scored light
+  with description "Good job killing the Spirit Monster! You get 5 points. You see a lot of loot and gold everywhere, with many gemstones including, emeralds, rubies, and more. But stuck to the center of the wall is a mini-case on a little platform. You open it and you see...  a beautiful diamond! Diamonds are very, very valuable and expensive in the town that you live in. So now that you see all the treasure, go on, take it!",
+  s_to Dark_Cave;
+
+Object -> Diamond "Diamond"
+  with name "diamond" "gem" "jewel"
+  with description "A beautiful shining diamond. This can be used in many cases!";
+
+Object -> Gold_Bag "Gold Bag"
+  with name "gold" "bag" "metal"
+  with description "A gold bag with many gold bars. You can use this to purchase a lot of items!";
+
 Object Center_of_the_Community "Center of the community"
   has scenery
   has light
@@ -134,7 +305,7 @@ Object Lovely_Forest "Lovely Forest"
   ne_to Portal_Room,
   s_to Small_Glade;
 
-Object Small_Glade "Small Glade."
+Object Small_Glade "Small Glade"
   has scenery
   has light
   with description " a small Glade with only two trees, to the west there is a scary forest, to the north is a lovely forest.",
@@ -144,7 +315,7 @@ Object Small_Glade "Small Glade."
 Object Scary_Forest "Scary Forest"
   has scenery
   has light
-  with description " a forest with dried trees and heavy fog. the only way to escape the nightmare is to go to the east.",
+  with description "A forest with dried trees and heavy fog. the only way to escape the nightmare is to go to the east.",
   e_to Small_Glade;
 
 Object -> Old_Hag "Old Hag"
@@ -246,6 +417,22 @@ Object Mystic_Island "Mystic Island"
   with description "The Mystic Island is where all the magic and myths come from. It's a myjestic place with a lot of interesting things to study. To the west, you see a shimmering, glowing portal.",
 w_to Castle;
 
+Object Unicorn "Unicorn"
+  with name "Unicorn" "Violet",
+  with description "A myjectic unicorn named Violet is very beutiful and pretty",
+  life [; 
+    Answer: print_ret "'Hello. I am Violet. Welcome to the Mystic Island'";
+    Climb: "Violet doesn't say anything as you clamber on. When you are steady, she hands you a map of Mythville";
+  ],
+  has animate,
+  has female; 
+
+Object Map "Map of Mystic Island" 
+  with name "Map",
+  has scored,
+  with score_value 10,
+  with description "This map will help you when yu are lost in the Mystic Island";
+
 Object Tree_House "Tree House" 
   has scenery
   has light 
@@ -263,6 +450,7 @@ Object -> School_Ghost "School Ghost"
   with name "ghost" "Bob",
   with description "The creepy ghost named Bob has haunted the school house for generations.",
   life [;
+    Answer: print_ret "Bob slowly turns around and looks directly at you. You stiffen as he slowly walks towards you. After what seems like forever, he smiles at you.";
     Attack: print_ret "The ghost gasps in surprise of being attacked. Nobody had dared to even cross paths with him";
     Kiss: print_ret "You pass right through him and his dog starts barking wildly so you decide to get out of there"; 
   ],
@@ -291,7 +479,9 @@ Object Ocean "Ocean"
 
 Object -> Pearl "Pearl"
   with name "Pearl",
-  with score_value 5;  
+  has scored,
+  with score_value 5,
+  with description "The pearl is pretty and most likely has value. You decide to keep it.";  
 
 Object -> Seashell "Seashell"
   with name "Shell";
@@ -332,7 +522,8 @@ Object -> Jar "Jar"
 Object Airlock "Airlock"
   has scenery
   has light
-  with description "A futuristic airlock",
+  with description "A futuristic airlock. A door to the south leads deeper into the space ship.",
+  s_to Transporter_Room,
   ne_to Long_Hallway;
 
 Object -> Space_Bag "Space Bag"
@@ -349,6 +540,7 @@ Object -> Space_Boot "Boot"
   with name "boot";
 
 Object -> Space_Helmet "Helmet"
+  with wear
   with name "helmet";
 
 Object Enchanted_Garden "Enchanted Garden"
@@ -417,3 +609,44 @@ Object Space_Station_Amusement_Park "Space Station"
   has scenery,
   has light,
   with description "You enter the building and see a huge board reading, 'This is the SpaceStation. Here you can have all the fun you want. Explore the place because there are more rides than you see. Have fun and stay safe :D'";
+
+
+Object Transporter_Room "transporter room"
+  has light scenery
+  with description "A small room leading to the interior of the ship. Nearby stands a circular pad, glowing with a soft blue light. Next to the pad is a control panel containing a set of buttons and labels.",
+  n_to Airlock;
+
+Object -> Transporter_Pad "transporter pad"
+  has supporter enterable static,
+  with name "pad" "pads" "transporter",
+  with description "A star-trek style transporter pad. It glows with a soft blue light.";
+
+Object -> Red_Transporter_Button "red transporter button"
+  has static,
+  with name "red" "button",
+  before [;
+    Push:
+      if (parent(player) == Transporter_Pad) {
+        move player to Lobby;
+        print_ret "You shimmer out of existence, rematerializing somewhere else entirely!";
+      } else {
+        print_ret "The air over the transporter pad briefly shimmers.";
+      }
+  ],
+  with description "A red button labeled 'Lobby'";
+
+Object -> Green_Transporter_Button "green transporter button"
+  has static,
+  with name "green" "button",
+  before [;
+    Push:
+      if (parent(player) == Transporter_Pad) {
+        move player to Mount_Angel;
+        print_ret "You shimmer out of existence, rematerializing somewhere else entirely!";
+      } else {
+        print_ret "The air over the transporter pad briefly shimmers.";
+      }
+  ],
+  with description "A green button labeled 'Mount Angel'";
+
+
