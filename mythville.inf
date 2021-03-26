@@ -398,21 +398,24 @@ Object Mystic_Island "Mystic Island"
   with description "The Mystic Island is where all the magic and myths come from. It's a myjestic place with a lot of interesting things to study. To the west, you see a shimmering, glowing portal.",
 w_to Castle;
 
-Object Unicorn "Unicorn"
+Object -> Unicorn "Unicorn"
   with name "Unicorn" "Violet",
   with description "A myjectic unicorn named Violet is very beutiful and pretty",
-  life [; 
+  life [;
     Answer: print_ret "'Hello. I am Violet. Welcome to the Mystic Island'";
     Climb: "Violet doesn't say anything as you clamber on. When you are steady, she hands you a map of Mythville";
   ],
-  has animate,
-  has female; 
+  before [;
+    Go:
+      "";
+  ]
+  has animate female enterable open; 
 
-Object Map "Map of Mystic Island" 
+Object -> Map "Map of Mystic Island" 
   with name "Map",
   has scored,
   with score_value 10,
-  with description "This map will help you when yu are lost in the Mystic Island";
+  with description "This map will help you when you are lost in the Mystic Island. According the this map, there is a Castle to the west of you.";
 
 Object Tree_House "Tree House" 
   has scenery
