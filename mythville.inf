@@ -44,7 +44,7 @@ Object -> Backpack "Backpack"
   has openable
   with description "A backpack. It has 5 capacity";
 
-Object -> Water_Bottle "Water Bottle"
+Object -> -> Water_Bottle "Water Bottle"
   with name "bottle",
   with description "A perfectly good water bottle. Drink it!",
   before [;
@@ -55,10 +55,21 @@ Object -> Water_Bottle "Water Bottle"
 Object Front_Yard "Front Yard"
   has scenery
   has light
-  with description "A nice and clean front yard. It has bushes, flowers, and grass everywhere. You can hear birds chirping in the distance. There is a giant oak tree placed near the sidewalk, which has many apples on it. To the east you see a church. To the west you see a supermarket.",
+  with description "A nice and clean front yard. It has bushes, flowers, and grass everywhere. You can hear birds chirping in the distance. There is a giant oak tree placed near the sidewalk, which has many apples on it. To the east you see a church. To the west you see a supermarket. To the northeast you see a Village.",
   s_to Lobby,
   e_to Church,
-  w_to Super_Market;
+  w_to Super_Market,
+  ne_to Village_Center;
+
+Object -> Tree "Oak Tree"
+  has static
+  with name "oak" "tree"
+  with description "A mighty oak tree. On it, you see an Apple.";
+
+Object -> Apple "Apple"
+  has edible
+  with name "apple" "fruit"
+  with description "A yummy juicy apple. You can eat it!";
 
 Object Church "Church" 
   has light
@@ -76,7 +87,190 @@ Object -> Hot_Dog "Hot Dog"
   with name "food"
   has edible
   with description "A delicious hot dog. Come on, eat it!";
- 
+
+Object Village_Center "Village Center"
+  has scenery light
+  with description "The center of a humble little village. You see many wooden houses with lots of villagers. To the west, you see a weaponsmith in his shop, selling some weapons for you to use. You also see a fisherman selling food and other products on the east. Where will you go?",
+  w_to Weapon_Shop,
+  e_to Fish_Market,
+  sw_to Front_Yard;
+
+Object Weapon_Shop "Weapon Store"
+  has scenery light
+  with description "A weapon shop. You see a villager selling some weapons, such as a Scythe, Knife, Wand, and more. 'Hey,' the villager says. 'My name's Steve. What would you like to purchase?'",
+  e_to Village_Center;
+
+Object -> Steve "Weaponsmith",
+  with name "Steve" "weaponsmith" "villager",
+  with description "A weaponsmith named Steve. Say hi!",
+  life [;
+    Attack: print_ret "He easily dodges your fist/weapon. Soon he grabs a weapon, and smacks you in the face so hard you literally topple over onto the grass facedown. Steve jumps out of his market, and points his sword at your face. 'Ready to apologize?' he asks mischeviously.";
+    Answer: print_ret "Hi, I'm Steve, and this is my weapon shop. What weapon would you like to buy?";
+],
+has animate, 
+has male;
+
+Object -> Knife "Knife",
+  with name "knife" "dagger" "blade" "weapon",
+  with description "A very fine bronze knife. It costs only one Gold Bar.",
+  before [;
+    Buy: 
+     if (Gold_Bag.gold > 0) {
+         print "You buy the knife.";
+         move Knife to player;
+         Gold_Bag.gold = Gold_Bag.gold - 1;
+         return true;
+      } else {
+         print "You can't buy the knife, as you don't have gold.^^";
+         return false;
+    
+    };
+    Take:
+    if (Gold_Bag.gold > 0) {
+         print "You buy the knife.";
+         Gold_Bag.gold = Gold_Bag.gold - 1;
+         return true;
+      } else {
+         print "You can't buy the knife, as you don't have gold.^^";
+         return false;
+     }
+];
+
+Object -> Scythe "Scythe",
+  with name "scythe" "weapon",
+  with description "A very sharp scythe. The steel blade at the top is very powerful and sharp. It costs 2 Gold Bars.",
+  before [;
+    Buy:
+     if (Gold_Bag.gold > 1 ) {
+         print "You buy the scythe.";
+         move Scythe to player;
+         Gold_Bag.gold = Gold_Bag.gold - 2;
+         return true;
+      } else {
+         print "You can't buy the scythe, as you don't have enough gold.^^";
+         return false;
+
+    };
+    Take:
+    if (Gold_Bag.gold > 1 ) {
+         print "You buy the scythe.";
+         Gold_Bag.gold = Gold_Bag.gold - 2;
+         return true;
+      } else {
+         print "You can't buy the scythe, as you don't have enough gold.^^";
+         return false;
+    }
+];
+
+Object Wand "Wand"
+  with name "wand" "weapon",
+  with description "A basic wand. Since it's for beginners who don't know much about magic (that's you) it only costs one piece of gold. Buy it, if you'd like.",
+  before [;
+   if (Gold_Bag.gold > 0) {
+         print "You buy the wand.";
+         move Wand to player;
+         Gold_Bag.gold = Gold_Bag.gold - 1;
+         return true;
+      } else {
+         print "You can't buy the wand, as you don't have gold.^^";
+         return false;
+
+    };
+    Take:
+    if (Gold_Bag.gold > 0) {
+         print "You buy the wand.";
+         Gold_Bag.gold = Gold_Bag.gold - 1;
+         return true;
+      } else {
+         print "You can't buy the wand, as you don't have gold.^^";
+         return false;
+     }
+];
+
+Object Fish_Market "Fish Market"
+  has scenery light
+  with description "A very nice fish market. You see a kind fisherman named Joe. He sells some food like fish and apples. Say hi to him!",
+  w_to Village_Center;
+
+Object -> Joe "Fisherman"
+  with name "Joe" "fisherman" "villager",
+  with description "A fisherman named Joe. Hello!",
+  life [;
+    Attack: print_ret "Joe grabs a fish and tries to protect himself as you throw your weapon/fist out at him. When you see his scared face, you relent though, and apologize. He sniffles and grabs his bucket of fish. He's better now. 'Hello,' he says. 'I'm Joe. What would you like to buy?'";
+    Answer: print_ret "Hello, this is my fish shop. I have a variety of foods, such as apples, fish of course, and a few more! So what would you like to buy?";
+
+],
+has animate,
+has male;
+
+Object -> Fish_Bucket "Fish Bucket" 
+  with name "fish" "bucket" "barrel",
+  with fish 70,
+  with description [;
+    print "A fish barrel. It is pre-cooked, and has a quantity of ";
+    print self.fish;
+    " fish. It costs 2 pieces of gold.";
+],
+  before [;
+   Buy:
+     if (Gold_Bag.gold > 1 ) {
+         print "You buy the fish bucket.";
+         move Fish_Bucket to player;
+         Gold_Bag.gold = Gold_Bag.gold - 2;
+         return true;
+      } else { 
+         print "You can't buy the fish bucket, as you don't have enough gold.^^";
+         return false;
+
+    };
+    Take:
+    if (Gold_Bag.gold > 1 ) {
+         print "You buy the fish bucket.";
+         Gold_Bag.gold = Gold_Bag.gold - 2;
+         return true;
+      } else {
+         print "You can't buy the fish bucket, as you don't have enough gold.^^";
+         return false;
+    };
+   Eat:
+      print "You eat a fish. Not bad! It tastes well cooked.^^";
+      self.fish = self.fish - 1;
+];
+
+Object -> Apple_Bag "Apple Bag"
+  with name "apple" "bag",
+  with apples 40,  
+  with description [;
+    print "A bag of apples. It's very juicy and ripe, and has ";
+    print self.apples;
+    " apples. It costs 1 piece of gold.";
+],
+  before [;
+   Buy:
+     if (Gold_Bag.gold > 0 ) {
+         print "You buy the apple bag. Yummy!";
+         move Apple_Bag to player;
+         Gold_Bag.gold = Gold_Bag.gold - 1;
+         return true;
+      } else {
+         print "You can't buy the apple bag, as you don't have gold.^^";
+         return false;
+
+    };
+    Take:
+    if (Gold_Bag.gold > 0 ) {
+         print "You buy the apple bag. Yummy!";
+         Gold_Bag.gold = Gold_Bag.gold - 1;
+         return true;
+      } else {
+         print "You can't buy the apple bag, as you don't have enough gold.^^";
+         return false;
+    };
+   Eat:
+      print "You eat an apple. Not bad! It tastes good.^^";
+      self.apples = self.apples - 1;
+];
+
 Object Long_Hallway "Long Hallway"
   has scenery
   has light
@@ -98,26 +292,30 @@ Object Abandoned_Library "Abandoned Library"
   n_to Old_Hallway;
 
 Object -> Zombie_Monk "Zombie Monk"
-  with name "monk" "zombie" "gatso",
-  with description "An ancient monk that had been zombified. He's friendly, though.",
+  with name "monk" "zombie" "Gatso",
+  with description "An ancient monk that was zombified. His name is Gatso.",
   life [;
-    Attack: print_ret "The zombie growls in pain. There's no turning back now, as he isn't friendly anymore.";
-    Answer: print_ret "Garbulalurggh blargiflast. Urgilurk. The zombie points to an old hallway. Luckily, you see a Zombulic translator book."; 
+    Attack:
+      if (Sword in player) {
+          print "You swing your sword, and the zombie growls in pain, clutching his chest. He looks at you with menacing eyes before he disintegrates to ash.";
+          remove self;
+          return true;
+      } else {
+          print "You punch him very hard, and he staggers back, angry. He hits you with his fist, and you fall on the ground, angry. You could explore the library and then comeback to fight, but if not, how will you destroy him?^";
+     return false;
+ 
+}
+    Answer: print_ret "Urrghh."; 
   ],
   has animate,
   has male;
-
-Object ->  Zombulic_Translator_Book "Zombulic Translator Book"
-  with name "translator" 
-  with description "Urggh = nothing - sound of a zombie. Burg = hello.  Blar = old. Garb = that. Ula = is the. Harg = here. Giflast = hallway. Lurk = there. Urg = go.";
  
 Object Hidden_Room "Hidden Room" 
   has scenery
   has light
-  with description "A dark hidden place. You can hear eerie voices and bats screeching. You see that there is enchanted books on each bookshelf and even some weapons lying around. You realize this is the place where the librarians kept their most treasured and valuable items. The enchanted books give some special powers to the weapons and teaches you how to use it.",
-  u_to Abandoned_Library;
-
-Object -> Enchanted_Book "Enchanted Book"
+  with description "A dark hidden place. You can hear eerie voices and bats screeching. You see that there is enchanted books on each bookshelf and even some weapons lying around. You realize this is the place where the librarians kept their most treasured and valuable items. The enchanted books give some special powers to the weapons and teaches you how to use it.";
+  
+Object Enchanted_Book "Enchanted Book"
   with name "book",
   with description "Smite: Use the Smite Enchantment by reaching your sword up into the clouds and calling for the lightning. The lighning will soon come down and charge your weapon with electricity. Use this to smite one of your enemies. Note: Rub on weapon to activate enchantment.";
 
@@ -162,7 +360,7 @@ Object Reading_Room "Reading Room"
   e_to Old_Hallway;
 
 Object -> Fairy_Tale_Book "Fairy Tale Book"
-  with name "story"
+  with name "story" "book" "tale"
   with description "Belle, a nice princess, comes to the the Beast, a cursed prince, after her father had been taken by him. She lived with him for a few days and began to love him. When they kissed, the curse was broken, and the Beast turned into a handsome prince. They lived happily ever after. The end";
 
 Object Meditation_Room "Meditation Room" 
@@ -205,15 +403,21 @@ Object Flat_Plains "Flat Plains"
 Object Dark_Cave "Dark Cave"
   has scenery 
   has light
-  with description "A dark and gloomy cave. You can barely see anything. You do see some white objects though. But when you reach the end of the cavern, you look up to see a ten-foot tall monster with a huge club. You realize the white things were bones and skulls. It's a Spirit Monster!",
-  before [; Go:
+  with description [;
+                   print "A dark and gloomy cave. You can barely see anything, as there is little light.";
+                     if (Spirit_Monster in self) {
+                       print " You do see some white objects though. But when you reach the end of the cavern, you look up to see a ten-foot tall monster with a huge club. You realize the white things were bones and skulls. It's a Spirit Monster!^";
+                     }
+                  ],
+  before [;
+      Go:
            if (noun == sw_obj && Spirit_Monster in Dark_Cave) {
              ! tried to go southwest
              print "It's too late! You go southwest but the Spirit Monster blocks you! 'HAH HAH HAH,' he says.";
              return true;
            } else if (noun == n_obj && Spirit_Monster in Dark_Cave) {
-             ! tried to go west
-             print "You can't go that way.";
+             ! tried to go north
+             print "You can't go that way yet.";
              return true;
            } else {
              ! tried to go anywhere else, let them go
@@ -241,10 +445,10 @@ Object -> Spirit_Monster "Spirit Monster"
          };
     Kiss:
       if (Sword in player && Sword.smite_enchantment_level > 0 ) {
-           print "'Yuck!' The Spirit Monster looks at you in disgust and smacks you with his club so hard you crash into the wall, which cracks deeply and almost breaks. You get up groggily, but still have some strength.";
+           print "'Yuck!' The Spirit Monster looks at you in disgust and smacks you with his club. You crash into the wall, which cracks pretty deeply. You get up groggily, but still strong..";
            return true;
      } else if (Sword in player) {
-           print "You suddenly leap up onto the Spirit Monster's chest. He flails around, trying to smack you, but you climb up to his head and kiss him on the lips. He is so surprised that he drops his club. You use this distraction to smack him with your Sword and he tips over, falling town with a great big thud. As they say, the bigger they are, the harder they fall. But when you walk down, you see a shining room to the north. What could it be?";
+           print "You suddenly leap up onto the Spirit Monster's chest. He flails around, trying to smack you, but you climb up to his head and kiss him on the lips. He is so surprised that he drops his club. You use this distraction to smack him with your sword and he tips over, falling town with a great big thud. As they say, the bigger they are, the harder they fall. But when you walk down, you see a shining room to the north. What could it be?";
            remove self;
            return true;
         }
@@ -262,8 +466,40 @@ Object -> Diamond "Diamond"
   with description "A beautiful shining diamond. This can be used in many cases!";
 
 Object -> Gold_Bag "Gold Bag"
-  with name "gold" "bag" "metal"
-  with description "A gold bag with many gold bars. You can use this to purchase a lot of items!";
+  has container openable
+  with name "gold" "bag",
+  with gold 10,
+  with description [;
+    print "A gold bag with ";
+    print self.gold;
+          " gold bars. You can use this to purchase a lot of items!";
+   ],
+  before [;
+    Open:
+      print "You open the Gold Bag, revealing ";
+      print self.gold;
+            " gold bars.";
+];
+
+Object -> -> Gold_Bar "Gold Bar"
+  with name "gold" "bar"
+  with description "A shiny gold bar.";
+   
+Object -> -> Gold_Bar_Two "Gold Bar"
+  with name "gold" "bar"
+  with description "A shiny gold bar.";
+
+Object -> -> Gold_Bar_Three "Gold Bar"
+  with name "gold" "bar"
+  with description "A shiny gold bar.";
+
+Object -> -> Gold_Bar_Four "Gold Bar"
+  with name "gold" "bar"
+  with description "A shiny gold bar.";
+
+Object -> -> Gold_Bar_Five "Gold Bar"
+  with name "gold" "bar"
+  with description "A shiny gold bar.";
 
 Object Center_of_the_Community "Center of the community"
   has scenery
@@ -508,3 +744,6 @@ Object -> Space_Boot "Boot"
 Object -> Space_Helmet "Helmet"
   with wear
   with name "helmet";
+! Mythville
+! Mythville
+! Mythville
