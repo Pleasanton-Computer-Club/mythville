@@ -93,6 +93,17 @@ Object Church "Church"
   with description "A spiritual church. People pray to the gods for good food, shelter, and more. They perform many rituals there and sing melodious songs.",
   w_to Front_Yard;
 
+Object -> Church_Portal "Portal"
+  has static enterable
+  with name "portal" "vortex" 
+  with description "A bright portal. It is used to get into the Spirit World. Get on it!",
+  before [;
+    Enter:
+      print "You enter the portal. You start to get dizzy as you see purple swirls all around you. After several seconds, the dizziness fades. You shake your head and look. You're in the Spirit World!";
+      move player to Spirit_World;
+      return true;
+];
+
 Object Super_Market "Super Market"
   has scenery
   has light
@@ -127,37 +138,35 @@ has animate,
 has male;
 
 Object -> Knife "Knife",
+  has static,
   with name "knife" "dagger" "blade" "weapon",
   with description "A very fine bronze knife. It costs only one Gold Bar.",
   before [;
     Buy: 
-     if (Gold_Bag.gold > 0) {
+     if (Gold_Bag.gold > 0 && Gold_Bag in player) {
          print "You buy the knife.";
          move Knife to player;
          Gold_Bag.gold = Gold_Bag.gold - 1;
          return true;
-      } else {
+     } else {
          print "You can't buy the knife, as you don't have gold.^^";
          return false;
-    
     };
     Take:
-    if (Gold_Bag.gold > 0) {
-         print "You buy the knife.";
-         Gold_Bag.gold = Gold_Bag.gold - 1;
-         return true;
+    if (Gold_Bag.gold > 0 && Gold_Bag in player) {
+         print "You can't take the knife, you have to buy it.^^";
       } else {
-         print "You can't buy the knife, as you don't have gold.^^";
-         return false;
+         print "You can't take the knife, as you don't have gold.^^";
      }
 ];
 
 Object -> Scythe "Scythe",
+  has static,
   with name "scythe" "weapon",
   with description "A very sharp scythe. The steel blade at the top is very powerful and sharp. It costs 2 Gold Bars.",
   before [;
     Buy:
-     if (Gold_Bag.gold > 1 ) {
+     if (Gold_Bag.gold > 1 && Gold_Bag in player) {
          print "You buy the scythe.";
          move Scythe to player;
          Gold_Bag.gold = Gold_Bag.gold - 2;
@@ -165,24 +174,22 @@ Object -> Scythe "Scythe",
       } else {
          print "You can't buy the scythe, as you don't have enough gold.^^";
          return false;
-
     };
     Take:
-    if (Gold_Bag.gold > 1 ) {
-         print "You buy the scythe.";
-         Gold_Bag.gold = Gold_Bag.gold - 2;
-         return true;
+    if (Gold_Bag.gold > 1 && Gold_Bag in player) {
+         print "You can't take the scythe, you have to buy it.^^";
       } else {
-         print "You can't buy the scythe, as you don't have enough gold.^^";
-         return false;
+         print "You can't take the scythe, as you don't have enough gold.^^";
     }
 ];
 
-Object Wand "Wand"
+Object -> Wand "Wand"
+  has static,
   with name "wand" "weapon",
   with description "A basic wand. Since it's for beginners who don't know much about magic (that's you) it only costs one piece of gold. Buy it, if you'd like.",
   before [;
-   if (Gold_Bag.gold > 0) {
+    Buy:
+   if (Gold_Bag.gold > 0 && Gold_Bag in player) {
          print "You buy the wand.";
          move Wand to player;
          Gold_Bag.gold = Gold_Bag.gold - 1;
@@ -190,16 +197,12 @@ Object Wand "Wand"
       } else {
          print "You can't buy the wand, as you don't have gold.^^";
          return false;
-
     };
     Take:
-    if (Gold_Bag.gold > 0) {
-         print "You buy the wand.";
-         Gold_Bag.gold = Gold_Bag.gold - 1;
-         return true;
+    if (Gold_Bag.gold > 0 && Gold_Bag in player) {
+         print "You can't take the wand, you have to buy it.^^";
       } else {
-         print "You can't buy the wand, as you don't have gold.^^";
-         return false;
+         print "You can't take the wand, as you don't have gold.^^";
      }
 ];
 
@@ -220,6 +223,7 @@ has animate,
 has male;
 
 Object -> Fish_Bucket "Fish Bucket" 
+  has static,
   with name "fish" "bucket" "barrel",
   with fish 70,
   with description [;
@@ -229,7 +233,7 @@ Object -> Fish_Bucket "Fish Bucket"
 ],
   before [;
    Buy:
-     if (Gold_Bag.gold > 1 ) {
+     if (Gold_Bag.gold > 1 && Gold_Bag in player) {
          print "You buy the fish bucket.";
          move Fish_Bucket to player;
          Gold_Bag.gold = Gold_Bag.gold - 2;
@@ -237,16 +241,12 @@ Object -> Fish_Bucket "Fish Bucket"
       } else { 
          print "You can't buy the fish bucket, as you don't have enough gold.^^";
          return false;
-
     };
     Take:
-    if (Gold_Bag.gold > 1 ) {
-         print "You buy the fish bucket.";
-         Gold_Bag.gold = Gold_Bag.gold - 2;
-         return true;
+    if (Gold_Bag.gold > 1 && Gold_Bag in player) {
+         print "You can't take the fish bucket, you have to buy it.^^";
       } else {
-         print "You can't buy the fish bucket, as you don't have enough gold.^^";
-         return false;
+         print "You can't take the fish bucket, as you don't have enough gold.^^";
     };
    Eat:
       print "You eat a fish. Not bad! It tastes well cooked.^^";
@@ -254,7 +254,7 @@ Object -> Fish_Bucket "Fish Bucket"
 ];
 
 Object -> Apple_Bag "Apple Bag"
-  with name "apple" "bag",
+  with name "bag" "apples"
   with apples 40,  
   with description [;
     print "A bag of apples. It's very juicy and ripe, and has ";
@@ -263,7 +263,7 @@ Object -> Apple_Bag "Apple Bag"
 ],
   before [;
    Buy:
-     if (Gold_Bag.gold > 0 ) {
+     if (Gold_Bag.gold > 0 && Gold_Bag in player) {
          print "You buy the apple bag. Yummy!";
          move Apple_Bag to player;
          Gold_Bag.gold = Gold_Bag.gold - 1;
@@ -271,16 +271,12 @@ Object -> Apple_Bag "Apple Bag"
       } else {
          print "You can't buy the apple bag, as you don't have gold.^^";
          return false;
-
     };
     Take:
-    if (Gold_Bag.gold > 0 ) {
-         print "You buy the apple bag. Yummy!";
-         Gold_Bag.gold = Gold_Bag.gold - 1;
-         return true;
+    if (Gold_Bag.gold > 0 && Gold_Bag in player) {
+         print "You can't take the apple bag, you have to buy it.";
       } else {
-         print "You can't buy the apple bag, as you don't have enough gold.^^";
-         return false;
+         print "You can't take the apple bag, as you don't have gold.^^";
     };
    Eat:
       print "You eat an apple. Not bad! It tastes good.^^";
@@ -290,7 +286,7 @@ Object -> Apple_Bag "Apple Bag"
 Object Long_Hallway "Long Hallway"
   has scenery
   has light
-  with description "A long hallway with many doors. To the east you see a white door. To the north you see a glass door. On the ceiling you see a colorful portal. On the floor you see a wooden trap door. To the northwest you see an abandoned library. To the southwest you see a steel airlock. To the west stood a beautiful stone door with branches of trees covering the top. Looking to the southeast, you find a metal door with a galatic symbol carved into it, Space!",
+  with description "A long hallway with many doors. To the east you see a white door. To the north you see a glass door. On the ceiling you see a colorful portal. On the floor you see a wooden trap door. To the northwest you see an abandoned library. To the southwest you see a steel airlock. To the west stands a beautiful stone door with branches. Looking to the southeast, you find a metal door with a symbol, Space!",
   u_to Center_of_the_Community,
   nw_to Abandoned_Library,
   d_to Basement,
@@ -328,11 +324,11 @@ Object -> Zombie_Monk "Zombie Monk"
   has male;
  
 Object Hidden_Room "Hidden Room" 
-  has scenery
   has light
-  with description "A dark hidden place. You can hear eerie voices and bats screeching. You see that there is enchanted books on each bookshelf and even some weapons lying around. You realize this is the place where the librarians kept their most treasured and valuable items. The enchanted books give some special powers to the weapons and teaches you how to use it.";
+  with description "A dark hidden place. You can hear eerie voices and bats screeching. You see that there is enchanted books on each bookshelf and even some weapons lying around. You realize this is the place where the librarians kept their most treasured and valuable items. The enchanted books give some special powers to the weapons and teaches you how to use it.",
+  u_to Abandoned_Library;
   
-Object Enchanted_Book "Enchanted Book"
+Object -> Enchanted_Book "Enchanted Book"
   with name "book",
   with description "Smite: Use the Smite Enchantment by reaching your sword up into the clouds and calling for the lightning. The lighning will soon come down and charge your weapon with electricity. Use this to smite one of your enemies. Note: Rub on weapon to activate enchantment.";
 
@@ -756,7 +752,7 @@ Object -> Jar "Jar"
   has openable
   with capacity 3,
   with name "Jar",
-  With description "A small see through jar where you can store small things.";
+  with description "A small see through jar where you can store small things.";
 
 Object Airlock "Airlock"
   has scenery
@@ -817,7 +813,8 @@ Object Small_door "Small door"
 Object Rainbow_Ribbon_Gateway
   has scenery,
   has light,
-  with description "A beautiful rainbow gateway. Up in the clouds, you see birds chirping in harmony, and right in the center of the rainbow you see an elegant gate entrance, plastered with multi-colors and a key lock. You don't know how to open the gate until a bird swoops down towards you and drops a rainbow-colored key. You unlock the gate, and you see a living city of fairies, angels, pixies, all on the soft clouds of the sky. You see a rainbow cake, rainbow rocks, rainbow cotton candy, and a cloud shaped key with a fluffy texture with a tag reading 'cloud key'";
+  with description "A beautiful rainbow gateway. Up in the clouds, you see birds chirping in harmony, and right in the center of the rainbow you see an elegant gate entrance, plastered with multi-colors and a key lock. You don't know how to open the gate until a bird swoops down towards you and drops a rainbow-colored key. You unlock the gate, and you see a living city of fairies, angels, pixies, all on the soft clouds of the sky. You see a rainbow cake, rainbow rocks, rainbow cotton candy, and a cloud shaped key with a fluffy texture with a tag reading 'cloud key'",
+s_to Enchanted_Garden;
 
 Object -> Rainbow_cake "Cake"
   has edible, 
@@ -847,7 +844,8 @@ Object -> Gold_Key "Gold_Key"
 Object Space_Station_Amusement_Park "Space Station"
   has scenery,
   has light,
-  with description "You enter the building and see a huge board reading, 'This is the SpaceStation. Here you can have all the fun you want. Explore the place because there are more rides than you see. Have fun and stay safe :D'";
+  with description "You enter the building and see a huge board reading, 'This is the SpaceStation. Here you can have all the fun you want. Explore the place because there are more rides than you see. Have fun and stay safe :D'",
+  w_to Space_Station_Amusement_Park;
 
 
 Object Transporter_Room "transporter room"
@@ -887,5 +885,4 @@ Object -> Green_Transporter_Button "green transporter button"
       }
   ],
   with description "A green button labeled 'Mount Angel'";
-
 
