@@ -647,6 +647,22 @@ Object Castle "Castle"
   ne_to Tree_House,
   e_to Mystic_Island;
 
+Object -> Royal_Horse "Royal Horse"
+  has animate,
+  has female,
+  with name "Royal Horse" "Horse" "Christina", 
+  with description "A royal horse named Christina knows the castle more than anybody else",
+  life [; 
+    Answer: print_ret "The horse is apparently really friendly and you like her right away";
+    Attack: "Christina raises her front hooves and accidently knocks you over.";
+    Kiss: "The horse tenses a little, as if you were about to attack, but she continued to be gentle with you.";
+  ],
+  before [;
+    Go:
+      "";
+  ],
+has enterable open; 
+
 Object Mystic_Island "Mystic Island"
   has scenery
   has light
