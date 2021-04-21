@@ -11,12 +11,31 @@ Include "grammar";
   location = Lobby;
 ];
 
+Object Dark_Tunnel "dark tunnel"
+  has scenery
+  with description "a dark tunnel",
+  w_to Lobby;
+
+Object -> Apple "A green apple"
+  with description "a green apple";
+
 Object Lobby "starting lobby"
   has scenery
   has light
-  with description "A white room. To the west you see a long hallway. To the north you see a gate.",
+  with description "A white room. To the west you see a long hallway. To the north you see a gate. To the west a dark tunnel.",
+  e_to Dark_Tunnel,
   w_to Long_Hallway,
   n_to Front_Yard;
+
+Object -> Flashlight "Flashlight"
+  has switchable
+  with name "flashlight" "light",
+  after [;
+        SwitchOn: give self light;
+        SwitchOff: give self ~light;
+      ],
+  with description "a battered flashlight";
+  
 
 Object -> Blender "Blender"
   has container openable switchable
