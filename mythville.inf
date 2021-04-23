@@ -666,8 +666,15 @@ has enterable open;
 Object Mystic_Island "Mystic Island"
   has scenery
   has light
-  with description "The Mystic Island is where all the magic and myths come from. It's a myjestic place with a lot of interesting things to study. To the west, you see a shimmering, glowing portal.",
-w_to Castle;
+  with description "The Mystic Island is where all the magic and myths come from. It's a myjestic place with a lot of interesting things to study. To the west, you see a shimmering, glowing portal. To the north, you see a regular door.",
+w_to Castle,
+n_to Theater;
+
+Object -> Map "Map of Mystic Island"
+  with name "Map",
+  has scored,
+  with score_value 10,
+  with description "This map will help you when you are lost in the Mystic Island. According the this map, there is a Castle to the west of you and a Theater to the north of you.";
 
 Object -> Unicorn "Unicorn"
   with name "Unicorn" "Violet",
@@ -682,11 +689,11 @@ Object -> Unicorn "Unicorn"
   ]
   has animate female enterable open; 
 
-Object -> Map "Map of Mystic Island" 
-  with name "Map",
-  has scored,
-  with score_value 10,
-  with description "This map will help you when you are lost in the Mystic Island. According the this map, there is a Castle to the west of you.";
+Object Theater "Theater"
+  has scenery
+  has light
+  with description "A theater that's totally dark. You can't see a thing.",
+  n_to Mystic_Island;
 
 Object Tree_House "Tree House" 
   has scenery
