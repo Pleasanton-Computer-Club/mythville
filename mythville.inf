@@ -36,64 +36,59 @@ Object -> Flashlight "Flashlight"
       ],
   with description "a battered flashlight";
   
-
-Object -> Blender "Blender"
-  has container openable switchable
-  with name "blender",
-  enchantment_level 0,
-  before [;
-    Examine: print "a Cuisinart brand blender.";
-    if (self.enchantment_level == 0) {
-      "^The blender looks very ordinary.";
-    } else if (self.enchantment_level < 10) {
-      "^The blender glows with a soft blue light.";
-    } else if (self.enchantment_level < 20) {
-      "^The blender shines with a vibrant white light.";
-    };
-    Rub: 
-      self.enchantment_level = self.enchantment_level + 1;
-      print_ret "You rub the blender for good luck. You feel the blender become more magical!";
-  ],
-  with description "a Cuisinart brand blender.";
-
-Object -> Magic_Meter "magic meter"
-  with name "meter",
-  before [;
-    Examine: print "You peer into the magic meter.";
-    if (Blender.enchantment_level == 0) {
-      print_ret "^The blender isn't enchanted at all. Enchantment level 0";
-    } else if (Blender.enchantment_level < 10) {
-      print "^The blender is a little bit enchanted, level: ";
-      print_ret Blender.enchantment_level;
-    } else {
-      print "^The blender is highly enchanted, level: ";
-      print_ret Blender.enchantment_level;
-    }
-  ],
-  with description "A magic meter which reads the magic levels of nearby enchanted blenders.";
-
 Object -> Backpack "Backpack"
   with name "backpack"
   with capacity 5
   has container
   has openable
-  with description "A backpack. It has 5 capacity";
+  with description "A backpack. It has 5 capacity.";
 
 Object -> -> Water_Bottle "Water Bottle"
   with name "bottle",
-  with description "A perfectly good water bottle. Drink it!",
+  with water_level 5,
   before [;
-    Drink: remove self;
-    "Well, that was refreshening.";
- ];
+    Examine: print "A perfectly fine water bottle. Drink it!";
+      if (self.water_level == 5) {
+      "^The Water Bottle is full.";
+    } else if (self.water_level > 0) {
+      "^The Water Bottle is partly full.";
+    } else {
+      "^The Water Bottle is empty.";
+   
+    };
+    Drink:
+     if (self.water_level > 0) {
+       print "You take a sip. The water inside it reduces.";
+       self.water_level = self.water_level - 1;
+       return true;
+   } else {
+       print "The water bottle is empty, so you can't drink it.^^";
+       return false;
+       
+       };
+    Fill:
+      if (player in Pond && self.water_level == 0) {
+        print "You fill up the water bottle. Awesome!";
+        self.water_level = self.water_level + 5;
+        return true;
+    }  else if (self.water_level > 0) {
+        print "You don't need to fill the water bottle, as there is still water in it.^^";
+        return false;  
+   } else {
+        print "You can't fill the water bottle, as there is no water source.^^";
+        return false;
+          
+        };
+];
 
 Object Front_Yard "Front Yard"
   has scenery
   has light
-  with description "A nice and clean front yard. It has bushes, flowers, and grass everywhere. You can hear birds chirping in the distance. There is a giant oak tree placed near the sidewalk, which has many apples on it. To the east you see a church. To the west you see a supermarket. To the northeast you see a Village.",
+  with description "A nice and clean front yard. It has bushes, flowers, and grass everywhere. You can hear birds chirping in the distance. There is a giant oak tree placed near the sidewalk, which has many apples on it. To the east you see a church. To the west you see a supermarket. To the northwest you see a beautiful pond. To the northeast you see a Village.",
   s_to Lobby,
   e_to Church,
   w_to Super_Market,
+  nw_to Pond,
   ne_to Village_Center;
 
 Object -> Tree "Oak Tree"
@@ -105,6 +100,31 @@ Object -> Apple "Apple"
   has edible
   with name "apple" "fruit"
   with description "A yummy juicy apple. You can eat it!";
+
+Object Pond "Pond"
+  has scenery light
+  with description "A beautiful pond with lots of lilypads and bright yellow ducks. This pond is fresh and a great way to fill water bottles!",
+  se_to Front_Yard;
+
+Object -> Yellow_Duck "Duck"
+  has animate male,
+  with name "duck" "bird" "Bob",
+  with description "A bright, beautiful duck. It's name is Bob",
+  life [;
+    Attack: print_ret "Bob quickly flaps away, terrified. You feel sorry for him and stop trying to attack.";
+    Answer: print_ret "The duck quacks at you, and flaps its wings with comfort. His name is Bob.";
+    Kiss: print_ret "You kiss Bob's juicy orange beak. Bob looks at you happily and then goes back on to swimming.";
+];
+
+Object -> Frog "Frog"
+  has animate male,
+  with name "frog" "Fargo",
+  with description "A slimy frog named Fargo. I dare you to kiss it!",
+  life [;
+    Kiss: print_ret "You kiss the frog's slimy lips in disgust. Blegh! You wish you didn't accept the dare.";
+    Answer: print_ret "The frog just croaks. His name is Fargo.";
+    Attack: print_ret "The frog leaps away quickly. Frightened, he sinks underwater.";
+];
 
 Object Church "Church" 
   has light
@@ -126,8 +146,43 @@ Object -> Church_Portal "Portal"
 Object Super_Market "Super Market"
   has scenery
   has light
-  with description "The local supermarket. You see a seller named Joe, who is kindly selling a hot dog for free! You can take one if you want.",
+  with description "The local supermarket. You see a seller named Joe, who is kindly selling a hot dog for free! You can take one if you want. There is also a cool enchanted blender that you can try out.",
   e_to Front_Yard;
+
+Object -> Blender "Blender"
+  has container openable switchable
+  with name "blender",
+  enchantment_level 0,
+  before [;
+    Examine: print "a Cuisinart brand blender.";
+    if (self.enchantment_level == 0) {
+      "^The blender looks very ordinary.";
+    } else if (self.enchantment_level < 10) {
+      "^The blender glows with a soft blue light.";
+    } else if (self.enchantment_level < 20) {
+      "^The blender shines with a vibrant white light.";
+    };
+    Rub:
+      self.enchantment_level = self.enchantment_level + 1;
+      print_ret "You rub the blender for good luck. You feel the blender become more magical!";
+  ],
+  with description "a Cuisinart brand blender.";
+
+Object -> Magic_Meter "magic meter"
+  with name "meter",
+  before [;
+    Examine: print "You peer into the magic meter.";
+    if (Blender.enchantment_level == 0) {
+      print_ret "^The blender isn't enchanted at all. Enchantment level 0";
+    } else if (Blender.enchantment_level < 10) {
+      print "^The blender is a little bit enchanted, level: ";
+      print_ret Blender.enchantment_level;
+    } else {
+      print "^The blender is highly enchanted, level: ";
+      print_ret Blender.enchantment_level;
+    }
+  ],
+  with description "A magic meter which reads the magic levels of nearby enchanted blenders.";
 
 Object -> Hot_Dog "Hot Dog"
   with name "food"
@@ -273,7 +328,8 @@ Object -> Fish_Bucket "Fish Bucket"
 ];
 
 Object -> Apple_Bag "Apple Bag"
-  with name "bag" "apples"
+  has static,
+  with name "bag" "apples",
   with apples 40,  
   with description [;
     print "A bag of apples. It's very juicy and ripe, and has ";
@@ -398,9 +454,19 @@ Object -> Fairy_Tale_Book "Fairy Tale Book"
 Object Meditation_Room "Meditation Room" 
   has scenery
   has light
-  with description "An ancient meditation circle. People used to gather up here and meditate here for a while, trying to listen to the spirits of their ancestors. This is one of the few  places you can meditate to get into the spirit world, a magical place where spirits, ghosts, and human visitors can dance around in harmony. You can go north and meditate to enter the spirit world.",
-  s_to Old_Hallway,
-  n_to Spirit_World;
+  with description "An ancient meditation circle. People used to gather up here and meditate here for a while, trying to listen to the spirits of their ancestors. This is one of the few  places you can meditate to get into the spirit world, a magical place where spirits, ghosts, and human visitors can dance around in harmony. You can sit on the carpet and meditate to enter the spirit world.",
+  s_to Old_Hallway;
+
+Object -> Ancient_Carpet "Carpet"
+  has static enterable,
+  with name "carpet" "mat" "rug",
+  with description "A ancient meditation carpet. You can enter it and sit down to enter the Spirit World.",
+  before [;
+    Enter:
+      print "You sit down on the carpet and peacefully meditate. You think of happy thoughts as all of a sudden, you float up, leaving your body behind, and rise, into the Spirit World.";
+      move player to Spirit_World;
+      return true;
+];
 
 Object Spirit_World "Spirit World"
   has scenery
@@ -424,6 +490,17 @@ Object -> Spirit_Artifact "Spirit Artifact"
   has scored
   with score_value 10
   with description "An ancient spirit artifact made by the first ghosts themselves. You get 4 points!";
+
+Object -> Spirit_Portal "Portal"
+  has static enterable,
+  with name "portal",
+  with description "A portal to exit the Spirit World. It will take you to the Lobby.",
+  before [;
+    Enter:
+      print "You enter the portal. You see purple swirls surround you over and over until you shake your head. You're in the Lobby!";
+      move player to Lobby; 
+      return true;
+];
 
 Object Flat_Plains "Flat Plains"
   has scenery
@@ -510,28 +587,8 @@ Object -> Gold_Bag "Gold Bag"
     Open:
       print "You open the Gold Bag, revealing ";
       print self.gold;
-            " gold bars.";
+            "gold bars";
 ];
-
-Object -> -> Gold_Bar "Gold Bar"
-  with name "gold" "bar"
-  with description "A shiny gold bar.";
-   
-Object -> -> Gold_Bar_Two "Gold Bar"
-  with name "gold" "bar"
-  with description "A shiny gold bar.";
-
-Object -> -> Gold_Bar_Three "Gold Bar"
-  with name "gold" "bar"
-  with description "A shiny gold bar.";
-
-Object -> -> Gold_Bar_Four "Gold Bar"
-  with name "gold" "bar"
-  with description "A shiny gold bar.";
-
-Object -> -> Gold_Bar_Five "Gold Bar"
-  with name "gold" "bar"
-  with description "A shiny gold bar.";
 
 Object Center_of_the_Community "Center of the community"
   has scenery
