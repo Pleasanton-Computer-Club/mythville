@@ -16,13 +16,14 @@ Object Dark_Tunnel "dark tunnel"
   with description "a dark tunnel",
   w_to Lobby;
 
-Object -> Apple "A green apple"
+Object -> Green_Apple "green apple"
+  with name "apple" "food"
   with description "a green apple";
 
 Object Lobby "starting lobby"
   has scenery
   has light
-  with description "A white room. To the west you see a long hallway. To the north you see a gate. To the west a dark tunnel.",
+  with description "A white room. To the west you see a long hallway. To the north you see a gate. To the east a dark tunnel.",
   e_to Dark_Tunnel,
   w_to Long_Hallway,
   n_to Front_Yard;
@@ -84,12 +85,13 @@ Object -> -> Water_Bottle "Water Bottle"
 Object Front_Yard "Front Yard"
   has scenery
   has light
-  with description "A nice and clean front yard. It has bushes, flowers, and grass everywhere. You can hear birds chirping in the distance. There is a giant oak tree placed near the sidewalk, which has many apples on it. To the east you see a church. To the west you see a supermarket. To the northwest you see a beautiful pond. To the northeast you see a Village.",
+  with description "A nice and clean front yard. It has bushes, flowers, and grass everywhere. You can hear birds chirping in the distance. There is a giant oak tree placed near the sidewalk, which has many apples on it. To the east you see a church. To the west you see a supermarket. To the north you see a mine. To the northwest you see a beautiful pond. To the northeast you see a Village.",
   s_to Lobby,
   e_to Church,
   w_to Super_Market,
   nw_to Pond,
-  ne_to Village_Center;
+  ne_to Village_Center,
+  n_to Mines;
 
 Object -> Tree "Oak Tree"
   has static
@@ -100,6 +102,83 @@ Object -> Apple "Apple"
   has edible
   with name "apple" "fruit"
   with description "A yummy juicy apple. You can eat it!";
+
+Object Mines "The Mine"
+  has scenery light
+  with description "A very old ore mine. It's still in use, and you can see miners and workers. The chief worker scrutinizes you for a bit and then gives you a mining helmet. 'If you go too deep, just turn this on.' he says. He also gives you an iron pickaxe. So wear the helmet and go down to the mine!",
+  s_to Front_Yard,
+  d_to Small_Cave;
+
+Object -> Mining_Helmet "Helmet"
+  has switchable
+  with name "helmet" "headgear",
+  with description "A rusted mining helmet. Turn it on when you're in dark areas.",
+  before [;
+    Wear:
+      print "You put on the helmet.";
+      return true;
+],
+  after [;
+    SwitchOn: give self light;
+    SwitchOff: give self ~light;
+];
+
+Object -> Iron_Pickaxe "Pickaxe"
+  with name "iron" "pickaxe" "pick"
+  with description "An iron pickaxe. Use it to mine ores.";
+
+Object Small_Cave "Cave"
+  has scenery light,
+  with description "A cave. To the north, you see a tunnel. Go in and dig your way!",
+  n_to Tunnel,
+  u_to Mines;
+
+Object Tunnel "Tunnel"
+  has scenery light
+  with description "A dim tunnel.",
+  before [;
+    Dig:
+      if (noun == e_obj && Iron_Pickaxe in player) {
+        if (Iron_Ore in Mineral_Cave) {
+          print "You dig east and find iron!";
+          move player to Mineral_Cave;
+          return true;
+      } else {
+          print "You dig.";
+          return true;
+};
+    } else if (player in Tunnel && Iron_Pickaxe in player) {
+        print "You dig.";
+        return true;
+    } else if (player in Tunnel) {
+        print "You hit your fist on the wall. That hurts!^^";
+        return false;
+}; 
+],
+s_to Small_Cave;
+
+Object Mineral_Cave "Mineral Cave"
+  has scenery light
+  with description "An empty cave.",
+  w_to Tunnel;
+
+Object -> Iron_Ore "Iron Ore"
+  has static,
+  with name "iron" "metal" "ore",
+  with description "A beautiful, shiny, iron ore that is waiting to be mined. Come on, dig it!",
+  before [;
+    Dig:
+      if (noun == Iron_Ore && Iron_Pickaxe in player) {
+        print "You mine the iron ore. Awesome!";
+        move Iron_Ore to player;
+        return true;
+      } else if (noun == Iron_Ore) {
+        print "You hit your fist on the ore. Ouch!^^";
+        return false;
+};
+  
+];
+
 
 Object Pond "Pond"
   has scenery light
