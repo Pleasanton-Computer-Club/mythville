@@ -863,7 +863,7 @@ Object -> School_Ghost "School Ghost"
   with name "ghost" "Bob",
   with description "The creepy ghost named Bob has haunted the school house for generations.",
   life [;
-    Answer: print_ret "Bob slowly turns around and looks directly at you. You stiffen as he slowly walks towards you. After what seems like forever, he smiles at you.";
+    Answer: print_ret "Bob slowly turns around and looks directly at you. You stiffen as he slowly glides towards you. After what seems like forever, he smiles at you.";
     Attack: print_ret "The ghost gasps in surprise of being attacked. Nobody had dared to even cross paths with him";
     Kiss: print_ret "You pass right through him and his dog starts barking wildly so you decide to get out of there"; 
   ],
@@ -880,15 +880,33 @@ Object Strange_House "Strange House"
 Object Eiffel_Tower "Eiffel Tower" 
   has scenery
   has light
-  with description "The tower, glowing bright, looks peaceful under the setting sun. Below you, you see a blinding bright portal. To the south, you see a blue door.", 
+  with description "The tower, glowing bright, looks peaceful under the setting sun. Below you, you see a blinding bright portal. To the south, you see the ocean. To the west, you see a playground", 
   d_to Winter_Woods,
-  s_to Ocean; 
+  s_to Ocean,
+  e_to Playground;
+
+Object Playground "Playground"
+  has scenery
+  has light
+  with description "A colorful playground with many entertainments. To the west, you see the Eiffel Tower."
+  w_to Eiffel_Tower;
 
 Object Ocean "Ocean"
   has scenery
   has light
-  with description "The ocean only has a little light as you are in the twilight zone",
+  with description "The ocean only has a little light as you are in the twilight zone. To the north, you see the Eiffel Tower.",
   n_to Eiffel_Tower;
+
+Object -> Pufferfish "A spiky pufferfish"
+  with name "pufferfish" "fish",
+  with description "A cute but dangerous looking pufferfish named Puffer",
+  life [;
+    Answer: print_ret "Puffer merely glances at you while you swim past him.";
+    Attack: print_ret "Looking at Puffer's spikes, you think again.";
+    Kiss: print_ret "Looking at Puffer's spikes, you think again.";
+  ],
+  has animate,
+  has male;
 
 Object -> Pearl "Pearl"
   with name "Pearl",
