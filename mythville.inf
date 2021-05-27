@@ -726,7 +726,8 @@ Object Mount_Angel "Mt. Angel"
   has scenery
   has light
   with description " Mt. Angel is a mountian made of pure air and ice. a goddess looms over you with a mile wide smile. there is a city to the east.",
-  e_to Cloudtopia;
+  e_to Cloudtopia,
+  w_to The_Bridge;
 
 Object -> Goddess "Goddess"
   has female animate
@@ -737,6 +738,28 @@ Object -> Goddess "Goddess"
        Kiss: print_ret "wow. she tastes like your favorite candy!!!";
        Attack: print_ret "your weapon goes right past her";
   ];
+
+Object The_Bridge "The Bridge"
+  has scenery
+  has light
+  with description " an ancient bridge between two worlds, to the east is where you can see Mt. Angel, and further in the west is the depths of hell."
+  e_to Mount_Angel
+  w_to Hell
+
+Object -> Bridge_keeper "Bridge keeper"
+  has female animate
+  with name "keeper"
+  with description " her old glass eyes stare through your thoughts, her wrinkles are so deep that skin sags on the floor. she is about 450 years old."
+  life [;
+       Answer: print_ret "'... you are brave to come here to ... the bridge ...' wow, it took her 15 minutes to finally speak. and yet it took her 3 minutes before she said the bridge"
+       kiss: print_ret " you decide not to do it because she could crumble to dust "
+       attack: print_ret "you feel zapped when your sword is 15 inches from her face."
+
+Object Hell "Hell"
+  has scenery
+  has light
+  with description " it's dark caves and red sky are intimidating and very scary to see. you can see a bridge to the east."
+  e_to The_Bridge 
 
 Object Volcano "Volcano"
   has scenery
