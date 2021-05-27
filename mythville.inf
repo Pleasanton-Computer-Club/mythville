@@ -23,6 +23,7 @@ Object -> Green_Apple "green apple"
 Object Lobby "starting lobby"
   has scenery
   has light
+
   with description "A white room. To the west you see a long hallway. To the north you see a gate. To the east a dark tunnel.",
   e_to Dark_Tunnel,
   w_to Long_Hallway,
@@ -440,7 +441,7 @@ Object -> Apple_Bag "Apple Bag"
 Object Long_Hallway "Long Hallway"
   has scenery
   has light
-  with description "A long hallway with many doors. To the east you see a white door. To the north you see a glass door. On the ceiling you see a colorful portal. On the floor you see a wooden trap door. To the northwest you see an abandoned library. To the southwest you see a steel airlock. To the west stands a beautiful stone door with branches. Looking to the southeast, you find a metal door with a symbol, Space!",
+  with description "A long hallway with many doors. To the east you see a white door. To the north you see a glass door. On the ceiling you see a colorful portal. On the floor you see a wooden trap door. To the northwest you see an abandoned library. To the southwest you see a steel airlock. To the west stands a beautiful stone door with branches. Looking to the southeast, you find a metal door with a symbol, Space! To the North East you will see an oak door with vines around it",
   u_to Center_of_the_Community,
   nw_to Abandoned_Library,
   d_to Basement,
@@ -448,7 +449,14 @@ Object Long_Hallway "Long Hallway"
   sw_to Airlock,
   w_to Enchanted_Garden,
   se_to Space,
+  ne_to Enchanted_Room,
   e_to Lobby;
+
+Object Enchanted_Room "Enchanted Room"
+  has scenery
+  has light 
+  with description "A place that is very magical. There are many precious items that could be found. To the north there is a window. You can see many old but mysterious trees. To the South West there is a oak door with vines around it leading to the hallway",
+  sw_to Long_Hallway;
 
 Object Abandoned_Library "Abandoned Library"
   has scenery
