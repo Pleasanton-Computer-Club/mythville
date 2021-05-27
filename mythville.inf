@@ -11,71 +11,88 @@ Include "grammar";
   location = Lobby;
 ];
 
+Object Dark_Tunnel "dark tunnel"
+  has scenery
+  with description "a dark tunnel",
+  w_to Lobby;
+
+Object -> Green_Apple "green apple"
+  with name "apple" "food"
+  with description "a green apple";
+
 Object Lobby "starting lobby"
   has scenery
   has light
-  with description "A green room. To the west you see a long hallway. To the north you see a gate.",
+
+  with description "A white room. To the west you see a long hallway. To the north you see a gate. To the east a dark tunnel.",
+  e_to Dark_Tunnel,
   w_to Long_Hallway,
   n_to Front_Yard;
 
-Object -> Blender "Blender"
-  has container openable switchable
-  with name "blender",
-  enchantment_level 0,
-  before [;
-    Examine: print "a Cuisinart brand blender.";
-    if (self.enchantment_level == 0) {
-      "^The blender looks very ordinary.";
-    } else if (self.enchantment_level < 10) {
-      "^The blender glows with a soft blue light.";
-    } else if (self.enchantment_level < 20) {
-      "^The blender shines with a vibrant white light.";
-    };
-    Rub: 
-      self.enchantment_level = self.enchantment_level + 1;
-      print_ret "You rub the blender for good luck. You feel the blender become more magical!";
-  ],
-  with description "a Cuisinart brand blender.";
-
-Object -> Magic_Meter "magic meter"
-  with name "meter",
-  before [;
-    Examine: print "You peer into the magic meter.";
-    if (Blender.enchantment_level == 0) {
-      print_ret "^The blender isn't enchanted at all. Enchantment level 0";
-    } else if (Blender.enchantment_level < 10) {
-      print "^The blender is a little bit enchanted, level: ";
-      print_ret Blender.enchantment_level;
-    } else {
-      print "^The blender is highly enchanted, level: ";
-      print_ret Blender.enchantment_level;
-    }
-  ],
-  with description "A magic meter which reads the magic levels of nearby enchanted blenders.";
-
+Object -> Flashlight "Flashlight"
+  has switchable
+  with name "flashlight" "light",
+  after [;
+        SwitchOn: give self light;
+        SwitchOff: give self ~light;
+      ],
+  with description "a battered flashlight";
+  
 Object -> Backpack "Backpack"
   with name "backpack"
   with capacity 5
   has container
   has openable
-  with description "A backpack. It has 5 capacity";
+  with description "A backpack. It has 5 capacity.";
 
 Object -> -> Water_Bottle "Water Bottle"
   with name "bottle",
-  with description "A perfectly good water bottle. Drink it!",
+  with water_level 5,
   before [;
-    Drink: remove self;
-    "Well, that was refreshening.";
- ];
+    Examine: print "A perfectly fine water bottle. Drink it!";
+      if (self.water_level == 5) {
+      "^The Water Bottle is full.";
+    } else if (self.water_level > 0) {
+      "^The Water Bottle is partly full.";
+    } else {
+      "^The Water Bottle is empty.";
+   
+    };
+    Drink:
+     if (self.water_level > 0) {
+       print "You take a sip. The water inside it reduces.";
+       self.water_level = self.water_level - 1;
+       return true;
+   } else {
+       print "The water bottle is empty, so you can't drink it.^^";
+       return false;
+       
+       };
+    Fill:
+      if (player in Pond && self.water_level == 0) {
+        print "You fill up the water bottle. Awesome!";
+        self.water_level = self.water_level + 5;
+        return true;
+    }  else if (self.water_level > 0) {
+        print "You don't need to fill the water bottle, as there is still water in it.^^";
+        return false;  
+   } else {
+        print "You can't fill the water bottle, as there is no water source.^^";
+        return false;
+          
+        };
+];
 
 Object Front_Yard "Front Yard"
   has scenery
   has light
-  with description "A nice and clean front yard. It has bushes, flowers, and grass everywhere. You can hear birds chirping in the distance. There is a giant oak tree placed near the sidewalk, which has many apples on it. To the east you see a church. To the west you see a supermarket. To the northeast you see a Village.",
+  with description "A nice and clean front yard. It has bushes, flowers, and grass everywhere. You can hear birds chirping in the distance. There is a giant oak tree placed near the sidewalk, which has many apples on it. To the east you see a church. To the west you see a supermarket. To the north you see a mine. To the northwest you see a beautiful pond. To the northeast you see a Village.",
   s_to Lobby,
   e_to Church,
   w_to Super_Market,
-  ne_to Village_Center;
+  nw_to Pond,
+  ne_to Village_Center,
+  n_to Mines;
 
 Object -> Tree "Oak Tree"
   has static
@@ -86,6 +103,108 @@ Object -> Apple "Apple"
   has edible
   with name "apple" "fruit"
   with description "A yummy juicy apple. You can eat it!";
+
+Object Mines "The Mine"
+  has scenery light
+  with description "A very old ore mine. It's still in use, and you can see miners and workers. The chief worker scrutinizes you for a bit and then gives you a mining helmet. 'If you go too deep, just turn this on.' he says. He also gives you an iron pickaxe. So wear the helmet and go down to the mine!",
+  s_to Front_Yard,
+  d_to Small_Cave;
+
+Object -> Mining_Helmet "Helmet"
+  has switchable
+  with name "helmet" "headgear",
+  with description "A rusted mining helmet. Turn it on when you're in dark areas.",
+  before [;
+    Wear:
+      print "You put on the helmet.";
+      return true;
+],
+  after [;
+    SwitchOn: give self light;
+    SwitchOff: give self ~light;
+];
+
+Object -> Iron_Pickaxe "Pickaxe"
+  with name "iron" "pickaxe" "pick"
+  with description "An iron pickaxe. Use it to mine ores.";
+
+Object Small_Cave "Cave"
+  has scenery light,
+  with description "A cave. To the north, you see a tunnel. Go in and dig your way!",
+  n_to Tunnel,
+  u_to Mines;
+
+Object Tunnel "Tunnel"
+  has scenery light
+  with description "A dim tunnel.",
+  before [;
+    Dig:
+      if (noun == e_obj && Iron_Pickaxe in player) {
+        if (Iron_Ore in Mineral_Cave) {
+          print "You dig east and find iron!";
+          move player to Mineral_Cave;
+          return true;
+      } else {
+          print "You dig.";
+          return true;
+};
+    } else if (player in Tunnel && Iron_Pickaxe in player) {
+        print "You dig.";
+        return true;
+    } else if (player in Tunnel) {
+        print "You hit your fist on the wall. That hurts!^^";
+        return false;
+}; 
+],
+s_to Small_Cave;
+
+Object Mineral_Cave "Mineral Cave"
+  has scenery light
+  with description "An empty cave.",
+  w_to Tunnel;
+
+Object -> Iron_Ore "Iron Ore"
+  has static,
+  with name "iron" "metal" "ore",
+  with description "A beautiful, shiny, iron ore that is waiting to be mined. Come on, dig it!",
+  before [;
+    Dig:
+      if (noun == Iron_Ore && Iron_Pickaxe in player) {
+        print "You mine the iron ore. Awesome!";
+        move Iron_Ore to player;
+        return true;
+      } else if (noun == Iron_Ore) {
+        print "You hit your fist on the ore. Ouch!^^";
+        return false;
+};
+  
+];
+
+
+Object Pond "Pond"
+  has scenery light
+  with description "A beautiful pond with lots of lilypads and bright yellow ducks. This pond is fresh and a great way to fill water bottles!",
+  se_to Front_Yard;
+
+Object -> Yellow_Duck "Duck"
+  has animate male,
+  with name "duck" "bird" "Bob",
+  with description "A bright, beautiful duck. It's name is Bob",
+  life [;
+    Attack: print_ret "Bob quickly flaps away, terrified. You feel sorry for him and stop trying to attack.";
+    Answer: print_ret "The duck quacks at you, and flaps its wings with comfort. His name is Bob.";
+    Kiss: print_ret "You kiss Bob's juicy orange beak. Bob looks at you happily and then goes back on to swimming.";
+];
+
+Object -> Frog "Frog"
+  has animate male,
+  with name "frog" "Fargo",
+  with description "A slimy frog named Fargo. I dare you to kiss it!",
+  life [;
+    Kiss: print_ret "You kiss the frog's slimy lips in disgust. Blegh! You wish you didn't accept the dare.";
+    Answer: print_ret "The frog just croaks. His name is Fargo.";
+    Attack: print_ret "The frog leaps away quickly. Frightened, he sinks underwater.";
+];
 
 Object Church "Church" 
   has light
@@ -107,8 +226,43 @@ Object -> Church_Portal "Portal"
 Object Super_Market "Super Market"
   has scenery
   has light
-  with description "The local supermarket. You see a seller named Joe, who is kindly selling a hot dog for free! You can take one if you want.",
+  with description "The local supermarket. You see a seller named Joe, who is kindly selling a hot dog for free! You can take one if you want. There is also a cool enchanted blender that you can try out.",
   e_to Front_Yard;
+
+Object -> Blender "Blender"
+  has container openable switchable
+  with name "blender",
+  enchantment_level 0,
+  before [;
+    Examine: print "a Cuisinart brand blender.";
+    if (self.enchantment_level == 0) {
+      "^The blender looks very ordinary.";
+    } else if (self.enchantment_level < 10) {
+      "^The blender glows with a soft blue light.";
+    } else if (self.enchantment_level < 20) {
+      "^The blender shines with a vibrant white light.";
+    };
+    Rub:
+      self.enchantment_level = self.enchantment_level + 1;
+      print_ret "You rub the blender for good luck. You feel the blender become more magical!";
+  ],
+  with description "a Cuisinart brand blender.";
+
+Object -> Magic_Meter "magic meter"
+  with name "meter",
+  before [;
+    Examine: print "You peer into the magic meter.";
+    if (Blender.enchantment_level == 0) {
+      print_ret "^The blender isn't enchanted at all. Enchantment level 0";
+    } else if (Blender.enchantment_level < 10) {
+      print "^The blender is a little bit enchanted, level: ";
+      print_ret Blender.enchantment_level;
+    } else {
+      print "^The blender is highly enchanted, level: ";
+      print_ret Blender.enchantment_level;
+    }
+  ],
+  with description "A magic meter which reads the magic levels of nearby enchanted blenders.";
 
 Object -> Hot_Dog "Hot Dog"
   with name "food"
@@ -254,7 +408,8 @@ Object -> Fish_Bucket "Fish Bucket"
 ];
 
 Object -> Apple_Bag "Apple Bag"
-  with name "bag" "apples"
+  has static,
+  with name "bag" "apples",
   with apples 40,  
   with description [;
     print "A bag of apples. It's very juicy and ripe, and has ";
@@ -386,9 +541,19 @@ Object -> Fairy_Tale_Book "Fairy Tale Book"
 Object Meditation_Room "Meditation Room" 
   has scenery
   has light
-  with description "An ancient meditation circle. People used to gather up here and meditate here for a while, trying to listen to the spirits of their ancestors. This is one of the few  places you can meditate to get into the spirit world, a magical place where spirits, ghosts, and human visitors can dance around in harmony. You can go north and meditate to enter the spirit world.",
-  s_to Old_Hallway,
-  n_to Spirit_World;
+  with description "An ancient meditation circle. People used to gather up here and meditate here for a while, trying to listen to the spirits of their ancestors. This is one of the few  places you can meditate to get into the spirit world, a magical place where spirits, ghosts, and human visitors can dance around in harmony. You can sit on the carpet and meditate to enter the spirit world.",
+  s_to Old_Hallway;
+
+Object -> Ancient_Carpet "Carpet"
+  has static enterable,
+  with name "carpet" "mat" "rug",
+  with description "A ancient meditation carpet. You can enter it and sit down to enter the Spirit World.",
+  before [;
+    Enter:
+      print "You sit down on the carpet and peacefully meditate. You think of happy thoughts as all of a sudden, you float up, leaving your body behind, and rise, into the Spirit World.";
+      move player to Spirit_World;
+      return true;
+];
 
 Object Spirit_World "Spirit World"
   has scenery
@@ -412,6 +577,17 @@ Object -> Spirit_Artifact "Spirit Artifact"
   has scored
   with score_value 10
   with description "An ancient spirit artifact made by the first ghosts themselves. You get 4 points!";
+
+Object -> Spirit_Portal "Portal"
+  has static enterable,
+  with name "portal",
+  with description "A portal to exit the Spirit World. It will take you to the Lobby.",
+  before [;
+    Enter:
+      print "You enter the portal. You see purple swirls surround you over and over until you shake your head. You're in the Lobby!";
+      move player to Lobby; 
+      return true;
+];
 
 Object Flat_Plains "Flat Plains"
   has scenery
@@ -498,28 +674,8 @@ Object -> Gold_Bag "Gold Bag"
     Open:
       print "You open the Gold Bag, revealing ";
       print self.gold;
-            " gold bars.";
+            "gold bars";
 ];
-
-Object -> -> Gold_Bar "Gold Bar"
-  with name "gold" "bar"
-  with description "A shiny gold bar.";
-   
-Object -> -> Gold_Bar_Two "Gold Bar"
-  with name "gold" "bar"
-  with description "A shiny gold bar.";
-
-Object -> -> Gold_Bar_Three "Gold Bar"
-  with name "gold" "bar"
-  with description "A shiny gold bar.";
-
-Object -> -> Gold_Bar_Four "Gold Bar"
-  with name "gold" "bar"
-  with description "A shiny gold bar.";
-
-Object -> -> Gold_Bar_Five "Gold Bar"
-  with name "gold" "bar"
-  with description "A shiny gold bar.";
 
 Object Center_of_the_Community "Center of the community"
   has scenery
@@ -578,7 +734,8 @@ Object Mount_Angel "Mt. Angel"
   has scenery
   has light
   with description " Mt. Angel is a mountian made of pure air and ice. a goddess looms over you with a mile wide smile. there is a city to the east.",
-  e_to Cloudtopia;
+  e_to Cloudtopia,
+  w_to The_Bridge;
 
 Object -> Goddess "Goddess"
   has female animate
@@ -589,6 +746,28 @@ Object -> Goddess "Goddess"
        Kiss: print_ret "wow. she tastes like your favorite candy!!!";
        Attack: print_ret "your weapon goes right past her";
   ];
+
+Object The_Bridge "The Bridge"
+  has scenery
+  has light
+  with description " an ancient bridge between two worlds, to the east is where you can see Mt. Angel, and further in the west is the depths of hell."
+  e_to Mount_Angel
+  w_to Hell
+
+Object -> Bridge_keeper "Bridge keeper"
+  has female animate
+  with name "keeper"
+  with description " her old glass eyes stare through your thoughts, her wrinkles are so deep that skin sags on the floor. she is about 450 years old."
+  life [;
+       Answer: print_ret "'... you are brave to come here to ... the bridge ...' wow, it took her 15 minutes to finally speak. and yet it took her 3 minutes before she said the bridge"
+       kiss: print_ret " you decide not to do it because she could crumble to dust "
+       attack: print_ret "you feel zapped when your sword is 15 inches from her face."
+
+Object Hell "Hell"
+  has scenery
+  has light
+  with description " it's dark caves and red sky are intimidating and very scary to see. you can see a bridge to the east."
+  e_to The_Bridge 
 
 Object Volcano "Volcano"
   has scenery
@@ -669,8 +848,15 @@ has enterable open;
 Object Mystic_Island "Mystic Island"
   has scenery
   has light
-  with description "The Mystic Island is where all the magic and myths come from. It's a myjestic place with a lot of interesting things to study. To the west, you see a shimmering, glowing portal.",
-w_to Castle;
+  with description "The Mystic Island is where all the magic and myths come from. It's a myjestic place with a lot of interesting things to study. To the west, you see a shimmering, glowing portal. To the north, you see a regular door.",
+w_to Castle,
+n_to Theater;
+
+Object -> Map "Map of Mystic Island"
+  with name "Map",
+  has scored,
+  with score_value 10,
+  with description "This map will help you when you are lost in the Mystic Island. According the this map, there is a Castle to the west of you and a Theater to the north of you.";
 
 Object -> Unicorn "Unicorn"
   with name "Unicorn" "Violet",
@@ -685,11 +871,11 @@ Object -> Unicorn "Unicorn"
   ]
   has animate female enterable open; 
 
-Object -> Map "Map of Mystic Island" 
-  with name "Map",
-  has scored,
-  with score_value 10,
-  with description "This map will help you when you are lost in the Mystic Island. According the this map, there is a Castle to the west of you.";
+Object Theater "Theater"
+  has scenery
+  has light
+  with description "A theater that's totally dark. You can't see a thing.",
+  n_to Mystic_Island;
 
 Object Tree_House "Tree House" 
   has scenery
@@ -708,7 +894,7 @@ Object -> School_Ghost "School Ghost"
   with name "ghost" "Bob",
   with description "The creepy ghost named Bob has haunted the school house for generations.",
   life [;
-    Answer: print_ret "Bob slowly turns around and looks directly at you. You stiffen as he slowly walks towards you. After what seems like forever, he smiles at you.";
+    Answer: print_ret "Bob slowly turns around and looks directly at you. You stiffen as he slowly glides towards you. After what seems like forever, he smiles at you.";
     Attack: print_ret "The ghost gasps in surprise of being attacked. Nobody had dared to even cross paths with him";
     Kiss: print_ret "You pass right through him and his dog starts barking wildly so you decide to get out of there"; 
   ],
@@ -725,15 +911,33 @@ Object Strange_House "Strange House"
 Object Eiffel_Tower "Eiffel Tower" 
   has scenery
   has light
-  with description "The tower, glowing bright, looks peaceful under the setting sun. Below you, you see a blinding bright portal. To the south, you see a blue door.", 
+  with description "The tower, glowing bright, looks peaceful under the setting sun. Below you, you see a blinding bright portal. To the south, you see the ocean. To the west, you see a playground", 
   d_to Winter_Woods,
-  s_to Ocean; 
+  s_to Ocean,
+  e_to Playground;
+
+Object Playground "Playground"
+  has scenery
+  has light
+  with description "A colorful playground with many entertainments. To the west, you see the Eiffel Tower."
+  w_to Eiffel_Tower;
 
 Object Ocean "Ocean"
   has scenery
   has light
-  with description "The ocean only has a little light as you are in the twilight zone",
+  with description "The ocean only has a little light as you are in the twilight zone. To the north, you see the Eiffel Tower.",
   n_to Eiffel_Tower;
+
+Object -> Pufferfish "A spiky pufferfish"
+  with name "pufferfish" "fish",
+  with description "A cute but dangerous looking pufferfish named Puffer",
+  life [;
+    Answer: print_ret "Puffer merely glances at you while you swim past him.";
+    Attack: print_ret "Looking at Puffer's spikes, you think again.";
+    Kiss: print_ret "Looking at Puffer's spikes, you think again.";
+  ],
+  has animate,
+  has male;
 
 Object -> Pearl "Pearl"
   with name "Pearl",
