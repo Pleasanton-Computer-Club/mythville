@@ -774,8 +774,8 @@ Object The_Old_World "The old world"
   has scenery
   has light
   with description " you can see a big demon and an ugly demon gambling to get more money, you can see hell to the east and a volcano to the west.",
-  e_to Hell
-  w_to Volcano
+  e_to Hell,
+  w_to Volcano;
 
 Object -> The_Demon_Duo "The Demon Duo"
   has male animate
