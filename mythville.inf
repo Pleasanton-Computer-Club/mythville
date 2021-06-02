@@ -750,31 +750,50 @@ Object -> Goddess "Goddess"
 Object The_Bridge "The Bridge"
   has scenery
   has light
-  with description " an ancient bridge between two worlds, to the east is where you can see Mt. Angel, and further in the west is the depths of hell."
-  e_to Mount_Angel
-  w_to Hell
+  with description " an ancient bridge between two worlds, to the east is where you can see Mt. Angel, and further in the west is the depths of hell.",
+  e_to Mount_Angel,
+  w_to Hell;
 
 Object -> Bridge_keeper "Bridge keeper"
   has female animate
-  with name "keeper"
-  with description " her old glass eyes stare through your thoughts, her wrinkles are so deep that skin sags on the floor. she is about 450 years old."
+  with name "keeper",
+  with description " her old glass eyes stare through your thoughts, her wrinkles are so deep that skin sags on the floor. she is about 450 years old.",
   life [;
-       Answer: print_ret "'... you are brave to come here to ... the bridge ...' wow, it took her 15 minutes to finally speak. and yet it took her 3 minutes before she said the bridge"
-       kiss: print_ret " you decide not to do it because she could crumble to dust "
-       attack: print_ret "you feel zapped when your sword is 15 inches from her face."
+       Answer: print_ret "'... you are brave to come here to ... the bridge ...' wow, it took her 15 minutes to finally speak. and yet it took her 3 minutes before she said the bridge";
+       kiss: print_ret " you decide not to do it because she could crumble to dust ";
+       attack: print_ret "you feel zapped when your sword is 15 inches from her face.";
 
 Object Hell "Hell"
   has scenery
   has light
-  with description " it's dark caves and red sky are intimidating and very scary to see. you can see a bridge to the east."
-  e_to The_Bridge 
+  with description " it's dark caves and red sky are intimidating and very scary to see. you can see a bridge to the east, and a few demons laughing to the west.",
+  e_to The_Bridge,
+  w_to The_Old_World;
+
+Object The_Old_World "The old world"
+  has scenery
+  has light
+  with description " you can see a big demon and an ugly demon gambling to get more money, you can see hell to the east and a volcano to the west.",
+  e_to Hell
+  w_to Volcano
+
+Object -> The_Demon_Duo "The Demon Duo"
+  has male animate
+  with name "Demons" "Duo"
+  with description " One demon looks extremely deformed and has no hair at all. and the other is tall and skinny with red hair all over.",
+  life [;
+       Answer: print_ret "the ugly demon looks at you with anger but the tall one does his turn, when the turn was finished the ugly demon started his turn imideatley. odd, they must be under a tranz.";
+       kiss: print_ret "the tall demon curtseys in a beautiful way, you can see his handsome face under the loads of hair. after the ugly demon did his turn the tall demon started the turn in just one second after, it seems like a tranz.";
+       Attack: print_ret "it would be best if you do not interupt their game by killing one.";
+  ];
 
 Object Volcano "Volcano"
   has scenery
   has light
-  with description " The Temputure at this volcano is a thousand degrees high. you can see a Dwarf city to the north and a portal stands to the south west.",
+  with description " The Temputure at this volcano is a thousand degrees high. you can see a Dwarf city to the north and a portal stands to the south west, yet you also hear laughing demons to the east...",
   n_to Dwarf_City,
-  sw_to Portal_Room;
+  sw_to Portal_Room,
+  e_to The_Old_World;
 
 Object Dwarf_City " Dwarf City"
   has scenery
@@ -782,7 +801,7 @@ Object Dwarf_City " Dwarf City"
   with description " A Huge Dwarf City is 11 acres wide! There is Lava as a light scource and there are houses of Metal! you can even see a few Gnomes too! there is a Volcano to the south.",
   s_to Volcano;
 
-Object -> Drunk_Dwarf "Drunken  Dwarf"
+Object -> Drunk_Dwarf "Drunken Dwarf"
   has male animate
   with name "dwarf"
   with description " His Firery red beard is covered in Beer and Grease he has small eyes and stone armor.",
