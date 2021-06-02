@@ -762,6 +762,7 @@ Object -> Bridge_keeper "Bridge keeper"
        Answer: print_ret "'... you are brave to come here to ... the bridge ...' wow, it took her 15 minutes to finally speak. and yet it took her 3 minutes before she said the bridge";
        kiss: print_ret " you decide not to do it because she could crumble to dust ";
        attack: print_ret "you feel zapped when your sword is 15 inches from her face.";
+       ];
 
 Object Hell "Hell"
   has scenery
