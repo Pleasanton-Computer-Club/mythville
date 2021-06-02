@@ -271,9 +271,10 @@ Object -> Hot_Dog "Hot Dog"
 
 Object Village_Center "Village Center"
   has scenery light
-  with description "The center of a humble little village. You see many wooden houses with lots of villagers. To the west, you see a weaponsmith in his shop, selling some weapons for you to use. You also see a fisherman selling food and other products on the east. Where will you go?",
+  with description "The center of a humble little village. You see many wooden houses with lots of villagers. To the west, you see a weaponsmith in his shop, selling some weapons for you to use. You also see a fisherman selling food and other products on the east. And there's an armory to the north. Where will you go?",
   w_to Weapon_Shop,
   e_to Fish_Market,
+  n_to Armory,
   sw_to Front_Yard;
 
 Object Weapon_Shop "Weapon Store"
@@ -436,6 +437,86 @@ Object -> Apple_Bag "Apple Bag"
    Eat:
       print "You eat an apple. Not bad! It tastes good.^^";
       self.apples = self.apples - 1;
+];
+
+Object Armory "Armory"
+  has scenery light
+  with description "The armory in the village. Get armored up!",
+  s_to Village_Center;
+
+Object -> Armorer "Armorer"
+  has animate male
+  with name "armorer" "Jack" "villager",
+  with description "The armorer named Jack. He can give you some armor for a price.",
+  life [;
+    Attack: print_ret "He dodges your attack, grabs a helmet, and smacks it in your face. You crumple to the ground. Ouch!";
+    Answer: print_ret "Hi there. I'm Jack. What armor would you like to buy?";
+];
+
+Object -> Helmet "Helmet"
+  has static clothing,
+  with name "helmet" "armor" "iron",
+  with description "A shiny iron helmet. It costs 3 gold bars.",
+   before [;
+   Buy:
+     if (Gold_Bag.gold > 2 && Gold_Bag in player) {
+         print "You buy the helmet.";
+         move Helmet to player;
+         Gold_Bag.gold = Gold_Bag.gold - 3;
+         return true;
+      } else {
+         print "You can't buy the helmet, as you don't have enough gold.^^";
+         return false;
+    };
+    Take:
+    if (Gold_Bag.gold > 2 && Gold_Bag in player) {
+         print "You can't take the helmet, you have to buy it.^^";
+      } else {
+         print "You can't take the helmet, as you don't have enough gold.^^";
+    };
+],
+after [;
+    Wear:
+    if (Helmet in player) {
+      print "You wear the helmet";
+      return true;
+   } else {
+      print "You have to buy it before you can wear it.^^";
+      return false;
+};
+];
+
+Object -> Chestplate "Chestplate"
+  has static clothing,
+  with name "chestplate" "armor" "iron",
+  with description "An iron chestplate. It costs 5 gold bars.",
+   before [;
+   Buy:
+     if (Gold_Bag.gold > 4 && Gold_Bag in player) {
+         print "You buy the chestplate.";
+         move Chestplate to player;
+         Gold_Bag.gold = Gold_Bag.gold - 5;
+         return true;
+      } else {
+         print "You can't buy the chestplate, as you don't have enough gold.^^";
+         return false;
+    };
+    Take:
+    if (Gold_Bag.gold > 4 && Gold_Bag in player) {
+         print "You can't take the chestplate, you have to buy it.^^";
+      } else {
+         print "You can't take the chestplate, as you don't have enough gold.^^";
+    };
+],
+after [;
+    Wear:
+    if (Chestplate in player) {
+      print "You wear the chestplate";
+      return true;
+   } else {
+      print "You have to buy it before you can wear it.^^";
+      return false;
+};
 ];
 
 Object Long_Hallway "Long Hallway"
@@ -670,11 +751,12 @@ Object -> Gold_Bag "Gold Bag"
     print self.gold;
           " gold bars. You can use this to purchase a lot of items!";
    ],
-  before [;
+  after [;
     Open:
-      print "You open the Gold Bag, revealing ";
-      print self.gold;
-            "gold bars";
+        print "You open the gold bag, revealing ";
+        print self.gold;
+        print " gold bars.";
+        return true;
 ];
 
 Object Center_of_the_Community "Center of the community"
@@ -1082,8 +1164,9 @@ Object Space "Space"
   has scenery,
   has light,
   with description "Space! You see Mars, Pluto, Uranus, many astroids and commets, and a gigantic building to the east. It's an amusement park, with a sign saying 'Space Station.' You see a dusty, golden key but you don't know what it's for.",
-  e_to Space_Station_Amusement_Park;
-
+  e_to Space_Station_Amusement_Park,
+  nw_to Long_Hallway;
+  
 Object -> Gold_Key "Gold_Key"
   has scored,
   with name "Gold_Key";
@@ -1092,7 +1175,7 @@ Object Space_Station_Amusement_Park "Space Station"
   has scenery,
   has light,
   with description "You enter the building and see a huge board reading, 'This is the SpaceStation. Here you can have all the fun you want. Explore the place because there are more rides than you see. Have fun and stay safe :D'",
-  w_to Space_Station_Amusement_Park;
+  w_to Space;
 
 
 Object Transporter_Room "transporter room"
